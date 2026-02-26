@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recruiting-Prozess-Scorecard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; padding: 20px; line-height: 1.6; }
+.container { max-width: 900px; margin: 0 auto; }
+.progress-bar-container { margin-bottom: 40px; }
+.progress-info { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: #64748b; }
+.progress-bar-bg { width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: #C4658C; transition: width 0.3s ease; }
+.dimension-title { font-size: 32px; font-weight: bold; color: #1e3a5f; margin-bottom: 32px; text-align: center; }
+.questions-container { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.question-block { margin-bottom: 32px; }
+.question-text { font-size: 18px; color: #0f172a; margin-bottom: 16px; font-weight: 500; }
+.answer-buttons { display: flex; gap: 12px; }
+.answer-button { flex: 1; padding: 16px; border-radius: 8px; border: 2px solid #e2e8f0; background: white; color: #64748b; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+.answer-button:hover { border-color: #C4658C; }
+.answer-button.selected { border-color: #C4658C; background: #fdf2f8; color: #C4658C; font-weight: bold; }
+.navigation { display: flex; justify-content: space-between; margin-top: 32px; }
+.nav-button { padding: 16px 32px; border-radius: 50px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+.nav-button.back { border: 2px solid #e2e8f0; background: white; color: #475569; }
+.nav-button.back:disabled { color: #cbd5e1; cursor: not-allowed; opacity: 0.5; }
+.nav-button.next { border: none; background: #C4658C; color: white; }
+.nav-button.next:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
+.results-container { text-align: center; }
+.results-title { font-size: 48px; font-weight: bold; color: #1e3a5f; margin-bottom: 16px; }
+.results-score { font-size: 72px; font-weight: bold; margin-bottom: 8px; }
+.results-label { font-size: 24px; color: #64748b; margin-top: 16px; margin-bottom: 32px; }
+.results-card { background: white; border-radius: 12px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 32px; text-align: left; }
+.results-header { display: flex; align-items: center; margin-bottom: 24px; }
+.results-emoji { font-size: 48px; margin-right: 16px; }
+.results-status { font-size: 32px; font-weight: bold; margin: 0; }
+.results-description { font-size: 18px; color: #475569; line-height: 1.6; margin-bottom: 24px; }
+.dimension-scores { margin-bottom: 20px; }
+.dimension-score-item { margin-bottom: 20px; }
+.dimension-score-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.dimension-score-name { font-size: 16px; color: #475569; }
+.dimension-score-value { font-size: 16px; font-weight: bold; color: #1e3a5f; }
+.dimension-score-bar-bg { width: 100%; height: 12px; background: #e2e8f0; border-radius: 6px; overflow: hidden; }
+.dimension-score-bar-fill { height: 100%; background: #C4658C; transition: width 0.3s ease; }
+.cta-button { display: inline-block; background: #C4658C; color: white; padding: 16px 40px; border-radius: 50px; font-size: 18px; font-weight: bold; text-decoration: none; margin-bottom: 16px; }
+.cta-subtext { font-size: 14px; color: #64748b; }
+.action-field { background: white; border-radius: 12px; padding: 28px; margin-bottom: 24px; border-left: 6px solid #C4658C; }
+.action-field-header { display: flex; align-items: center; margin-bottom: 16px; }
+.action-field-icon { font-size: 32px; margin-right: 12px; }
+.action-field-title { font-size: 24px; font-weight: bold; color: #1e3a5f; }
+.action-field-why { font-size: 16px; color: #475569; margin-bottom: 20px; padding: 16px; background: #f8fafc; border-radius: 8px; }
+.action-section { margin-bottom: 24px; }
+.action-section-title { font-size: 18px; font-weight: bold; color: #1e3a5f; margin-bottom: 12px; }
+.action-item { padding: 12px 16px; margin-bottom: 10px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #C4658C; }
+.action-item-title { font-size: 16px; font-weight: 600; color: #0f172a; margin-bottom: 4px; }
+.action-item-meta { font-size: 14px; color: #64748b; margin-bottom: 6px; }
+.action-item-impact { font-size: 14px; color: #475569; font-style: italic; }
+.strengths-section { background: #f0fdf4; padding: 20px; border-radius: 8px; margin-top: 24px; }
+.strengths-title { font-size: 20px; font-weight: bold; color: #15803d; margin-bottom: 12px; }
+.strength-item { padding: 8px 0; color: #166534; font-size: 16px; }
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+<script>
+const dimensions = [
+  { title: "Prozessklarheit", questions: [
+    "Unser Recruiting-Prozess ist dokumentiert UND wird von allen Beteiligten aktiv genutzt (nicht nur 'vorhanden')",
+    "Wenn jemand Neues ins Recruiting-Team kommt, kann diese Person innerhalb von 2 Wochen eigenständig arbeiten",
+    "Entscheidungen im Recruiting-Prozess werden innerhalb von 48 Stunden getroffen",
+    "Kandidaten erleben keine Medienbrüche oder Informationsverluste zwischen den Prozessschritten",
+    "Wir haben unseren Recruiting-Prozess in den letzten 12 Monaten mindestens einmal überarbeitet"
+  ]},
+  { title: "Digitalisierung & Tools", questions: [
+    "Unser ATS/Recruiting-System ist die EINZIGE Quelle der Wahrheit für alle Recruiting-Aktivitäten (keine Parallel-Excel, keine E-Mail-Schleifen, keine Info-Silos)",
+    "Wir nutzen die Workflow- und Automatisierungsfunktionen unseres ATS aktiv (z.B. automatische Status-Updates, Pipeline-Regeln, Erinnerungen, Freigabe-Workflows)",
+    "Kandidaten können sich über jedes Gerät (Desktop, Tablet, Smartphone) in unter 5 Minuten bewerben",
+    "Unser ATS ist nahtlos mit allen relevanten Tools integriert (E-Mail, Kalender, Video-Interview-Tools, Vertragsmanagement) – Daten fließen automatisch, ohne Copy-Paste",
+    "Wir haben in den letzten 12 Monaten mindestens eine Prozessverbesserung durch Digitalisierung umgesetzt"
+  ]},
+  { title: "Candidate Experience", questions: [
+    "Bewerber erhalten innerhalb von 48 Stunden eine erste Rückmeldung (Status-Update, nicht nur Auto-Reply)",
+    "Der Bewerbungsprozess dauert maximal 5 Minuten UND funktioniert auf dem Smartphone einwandfrei",
+    "Kandidaten wissen jederzeit, in welcher Phase sie sich befinden und was als Nächstes passiert",
+    "Wir messen systematisch die Candidate Experience (z.B. NPS, Feedback-Umfragen) UND leiten daraus Verbesserungen ab",
+    "Auch abgelehnte Kandidaten empfehlen uns als Arbeitgeber weiter"
+  ]},
+  { title: "Datenbasierte Steuerung", questions: [
+    "Wir kennen unsere Time-to-Hire pro Rolle/Abteilung UND nutzen diese Daten aktiv zur Prozessoptimierung",
+    "Wir kennen die Kosten pro Einstellung (Cost-per-Hire) UND den ROI verschiedener Recruiting-Kanäle",
+    "Wir analysieren systematisch, an welchen Prozessschritten Kandidaten abspringen UND haben daraus konkrete Verbesserungen abgeleitet",
+    "Wir vergleichen unsere Recruiting-KPIs mit Branchen-Benchmarks oder internen Zielvorgaben",
+    "Recruiting-Kennzahlen werden monatlich an Geschäftsführung/Management reportet UND fließen in strategische Entscheidungen ein"
+  ]},
+  { title: "Team & Kompetenzen", questions: [
+    "Recruiting ist eine dedizierte Vollzeit-Verantwortung, nicht nur 'nebenbei'",
+    "Hiring Manager führen strukturierte Interviews anhand klarer Bewertungskriterien",
+    "HR und Fachabteilungen stimmen sich mindestens wöchentlich zu offenen Positionen ab",
+    "Unser Recruiting-Team hat ausreichend Kapazität für proaktives Sourcing und Employer Branding",
+    "Wir testen regelmäßig neue Recruiting-Ansätze (z.B. neue Kanäle, KI-Tools, Prozess-Experimente) und evaluieren deren Erfolg"
+  ]},
+  { title: "Kulturelle Verankerung", questions: [
+    "Recruiting ist regelmäßiger Tagesordnungspunkt in Geschäftsführungs-/Management-Meetings",
+    "Die Geschäftsführung ist persönlich bei Key-Hires involviert (z.B. Finalist-Gespräche, strategische Positionen)",
+    "Neuen Mitarbeitenden wird VOR dem ersten Arbeitstag ein strukturiertes Onboarding-Programm kommuniziert UND digitale Zugänge bereitgestellt",
+    "Mitarbeitende teilen aktiv offene Stellen in ihren Netzwerken UND werden dafür systematisch aktiviert",
+    "Employer Branding hat ein dediziertes Budget UND messbare Ziele"
+  ]}
+];
+
+const recommendations = {
+  "Prozessklarheit": {
+    critical: {
+      description: "Ihr Recruiting läuft ohne klar definierte Prozessschritte. Zuständigkeiten sind nicht eindeutig geregelt und Entscheidungen werden verzögert oder mehrfach diskutiert.",
+      quickWins: [
+        { title: "Recruiting-Prozess kompakt visualisieren", time: "1 Woche", impact: "Alle Beteiligten sehen auf einen Blick: Welche Schritte gibt es? Wer ist wofür zuständig? Das schafft sofort Klarheit und reduziert operative Reibung." },
+        { title: "Verantwortlichkeiten im Recruiting klar definieren (RACI-Matrix)", time: "3 Tage", impact: "Klare Verantwortlichkeiten reduzieren Abstimmungsaufwand und beschleunigen Entscheidungsprozesse." },
+        { title: "Realistische Besetzungszeiten pro Rolle festlegen", time: "1 Woche", impact: "Schafft realistische Erwartungen bei allen Beteiligten und reduziert internen Druck durch klare Zeitvorgaben." },
+      ],
+      midTerm: [
+        { title: "Prozess-Handbuch mit Checklisten erstellen", time: "4 Wochen", impact: "Neue Beteiligte werden schneller produktiv und Recruiting-Abläufe bleiben auch bei Personalwechsel stabil." },
+        { title: "(SLA) Verbindliche Entscheidungszeiten pro Prozessschritt festlegen (z. B. max. 48h)", time: "2 Monate", impact: "Verkürzt die Time-to-Hire messbar und reduziert Kandidatenabsprünge durch verbindliche Rückmeldungszeiten." },
+        { title: "Klare Übergabepunkte zwischen HR und Fachbereich festlegen", time: "6 Wochen", impact: "Reduziert Informationsverluste, vermeidet Rückfragen und sorgt für einen durchgängigen Prozess aus Kandidatensicht." },
+        { title: "Recruiting-Prozess extern analysieren und neu aufsetzen", time: "3 Monate", impact: "Beseitigt strukturelle Schwachstellen im Recruiting-System und schafft eine skalierbare Grundlage." },
+      ],
+    },
+    developing: {
+      description: "Der Recruiting-Prozess wird im Alltag unterschiedlich gelebt. Schwachstellen bleiben unklar, weil sie nicht systematisch besprochen werden.",
+      quickWins: [
+        { title: "Prozess-Walkthrough mit allen Beteiligten durchführen", time: "2 Wochen", impact: "Macht Schwachstellen im Prozess aus verschiedenen Perspektiven sichtbar und schafft Grundlage für gezielte Verbesserungen." },
+        { title: "Prozess-Dokumentation aktualisieren", time: "laufend", impact: "Reduziert Missverständnisse und stellt sicher, dass Recruiting einheitlich umgesetzt wird." },
+      ],
+      midTerm: [
+        { title: "Quartalsweise Prozess-Reviews etablieren", time: "laufend", impact: "Sichert die Weiterentwicklung des Recruiting-Prozesses und verhindert das Wiederauftreten alter Schwachstellen." },
+        { title: "Prozess-Metriken definieren und tracken", time: "2 Monate", impact: "Bottlenecks werden sichtbar und können gezielt optimiert werden." },
+      ],
+    },
+    strong: {
+      description: "Ihr Recruiting-Prozess ist klar dokumentiert und wird gelebt!",
+      optimization: [
+        { title: "Benchmark mit anderen Unternehmen", time: "laufend", impact: "Liefert externe Impulse und zeigt wo der eigene Prozess im Vergleich zu anderen Unternehmen steht." },
+        { title: "Neue Recruiting-Formate oder Tools gezielt testen", time: "3-6 Monate", impact: "Testet neue Ansätze systematisch und schafft Differenzierungsmerkmale gegenüber Mitbewerbern um Talente." },
+      ],
+    },
+  },
+  "Digitalisierung & Tools": {
+    critical: {
+      description: "Es fehlt ein strukturiertes System. Recruiting erfolgt mit manuellen Workarounds und Medienbrüchen.",
+      quickWins: [
+        { title: "ATS-Anbieter evaluieren (3-5 Demos buchen)", time: "2 Wochen", impact: "Stellt sicher, dass die gewählte Lösung langfristig passt – und vermeidet kostspielige Fehlentscheidungen." },
+        { title: "E-Mail-Templates für Standard-Kommunikation erstellen", time: "2 Wochen", impact: "Spart operative Zeit, erhöht die Antwortgeschwindigkeit und verbessert die Candidate Experience." },
+      ],
+      midTerm: [
+        { title: "Bewerberdaten in einer zentralen Datenbank bündeln", time: "4 Wochen", impact: "Transparenz über alle laufenden Bewerbungen sowie eine verlässliche Datenbasis für weitere Digitalisierungsschritte." },
+        { title: "ATS implementieren (inkl. Team-Schulung)", time: "3-4 Monate", impact: "Zentralisiert alle Recruiting-Aktivitäten in einem System und schafft die Basis für professionelles, skalierbares Recruiting." },
+        { title: "Bewerbungsformular optimieren (Mobile-first)", time: "4 Wochen", impact: "Reduziert mobile Abbrüche und verbessert die Conversion von Interessenten zu Bewerbenden." },
+        { title: "Standardprozesse im ATS automatisieren", time: "6 Wochen", impact: "Entlastet das HR-Team von manuellen Koordinationsaufgaben und schafft Kapazität für strategische Arbeit." },
+        { title: "Recruiting-Systemlandschaft strategisch neu strukturieren", time: "6-12 Monate", impact: "Schafft die technische Grundlage für ein skalierbares, datenbasiertes Recruiting-System." },
+      ],
+    },
+    developing: {
+      description: "Das ATS ist implementiert, wird jedoch inkonsistent genutzt. Prozesse laufen teilweise manuell oder außerhalb des Systems.",
+      quickWins: [
+        { title: "ATS-Schulung für alle Nutzer (2h Workshop)", time: "1 Woche", impact: "Sichert den ROI des bestehenden ATS und verhindert parallele Schattenprozesse." },
+        { title: "Workflow-Features im ATS aktivieren", time: "2 Wochen", impact: "Verhindert Prozessbrüche und sorgt für konsistente Abläufe ohne zusätzliche Systemkosten." },
+        { title: "Mobile-Bewerbung selbst testen und optimieren", time: "3 Tage", impact: "Identifiziert Abbruchpunkte im mobilen Bewerbungsprozess und erhöht die Anzahl vollständig eingereichter Bewerbungen." },
+      ],
+      midTerm: [
+        { title: "ATS mit Kalender-System integrieren", time: "4 Wochen", impact: "Reduziert Koordinationsaufwand, vermeidet Terminüberschneidungen und verkürzt die Time-to-Interview." },
+        { title: "Video-Interview-Tool integrieren", time: "6 Wochen", impact: "Beschleunigt digitale Interviews und verhindert Medienbrüche im Auswahlprozess." },
+        { title: "E-Signature-Tool integrieren", time: "2 Monate", impact: "Senkt die Time-to-Contract und minimiert das Risiko, Kandidaten in der Angebotsphase zu verlieren." },
+      ],
+    },
+    strong: {
+      description: "Ihr Recruiting ist gut digitalisiert. Tools sind integriert, Automatisierungen laufen!",
+      optimization: [
+        { title: "KI-gestützte Tools testen", time: "3 Monate", impact: "Automatisiert Vorqualifizierung und reduziert subjektive Verzerrungen in der Kandidatenbewertung." },
+        { title: "Analytics-Dashboard mit Echtzeit-Daten aufbauen", time: "2 Monate", impact: "Macht Engpässe im Prozess frühzeitig sichtbar und ermöglicht datenbasierte Entscheidungen in Echtzeit." },
+        { title: "Neue Integrations-Möglichkeiten prüfen", time: "laufend", impact: "Verhindert technologischen Stillstand und sichert langfristige Wettbewerbsfähigkeit im Recruiting." },
+      ],
+    },
+  },
+  "Candidate Experience": {
+    critical: {
+      description: "Fehlende Eingangsbestätigungen führen zu Nachfragen, Frustration und negativer Wahrnehmung des Arbeitgebers.",
+      quickWins: [
+        { title: "Auto-Responder nach Bewerbungseingang einrichten", time: "1 Tag", impact: "Verbessert die wahrgenommene Professionalität des Unternehmens und stabilisiert die Candidate Experience ab dem ersten Kontakt." },
+        { title: "48h-Rückmelde-Regel einführen", time: "1 Woche", impact: "Reduziert Kandidatenabsprünge zwischen Prozessstufen und signalisiert Wertschätzung durch schnelle Rückmeldung." },
+        { title: "Bewerbungsformular auf 5 Pflichtfelder reduzieren", time: "2 Tage", impact: "Erhöht die Conversion-Rate im Bewerbungsprozess und reduziert Abbrüche, insbesondere im mobilen Umfeld." },
+        { title: "FAQ-Seite für Bewerber erstellen", time: "1 Woche", impact: "Erhöht Transparenz im Bewerbungsprozess, reduziert operative Rückfragen und entlastet Recruiting-Team bei Standardthemen." },
+      ],
+      midTerm: [
+        { title: "Prozess-Landkarte für Kandidaten erstellen", time: "4 Wochen", impact: "Gibt Kandidaten jederzeit Orientierung über den nächsten Schritt, reduziert Unsicherheit und stärkt das Vertrauen in den Prozess." },
+        { title: "Kandidaten-Feedback systematisch einholen", time: "6 Wochen", impact: "Ermöglicht gezielte Optimierung der Candidate Experience auf Basis realer Rückmeldungen statt Vermutungen." },
+        { title: "Absagen personalisieren", time: "4 Wochen", impact: "Hinterlässt auch bei abgelehnten Kandidaten einen professionellen Eindruck und stärkt die Arbeitgebermarke nachhaltig." },
+        { title: "Interview-Vorbereitung automatisiert versenden", time: "4 Wochen", impact: "Erhöht die Qualität der Gespräche, reduziert No-Shows und stärkt die professionelle Wahrnehmung des Unternehmens." },
+        { title: "Candidate-Experience-Programm mit Touchpoint-Mapping", time: "6 Monate", impact: "Identifiziert alle Touchpoints der Candidate Journey und schafft die Grundlage für eine systematisch optimierte Bewerbererfahrung." },
+      ],
+    },
+    developing: {
+      description: "Der Prozess wird intern als 'okay' wahrgenommen, aber echte Reibungspunkte für Kandidaten bleiben unsichtbar.",
+      quickWins: [
+        { title: "Bewerbungsprozess selbst als Kandidat durchlaufen", time: "1 Tag", impact: "Identifiziert Conversion-Killer im Prozess. Grundlage für messbare Verbesserungen." },
+        { title: "Status-Update-Mails standardisieren und automatisieren", time: "2 Wochen", impact: "Reduktion manueller Statusanfragen, höhere Candidate-Zufriedenheit, stabile Kommunikationsstandards." },
+      ],
+      midTerm: [
+        { title: "Candidate-Journey-Mapping Workshop durchführen", time: "1 Monat", impact: "Macht alle Touchpoints der Candidate Journey sichtbar und schafft die Grundlage für eine konsistent positive Bewerbererfahrung." },
+        { title: "Talent-Pool aufbauen", time: "3 Monate", impact: "Reduktion von Time-to-Hire und Sourcing-Kosten durch Wiederansprache bereits qualifizierter Kandidaten." },
+      ],
+    },
+    strong: {
+      description: "Ihre Candidate Experience ist exzellent. Kandidaten schwärmen von Ihrem Prozess!",
+      optimization: [
+        { title: "Externe Validierung der Candidate Experience durch Award-Zertifizierung", time: "6-12 Monate", impact: "Liefert externe Validierung der Candidate Experience und schafft ein glaubwürdiges Differenzierungsmerkmal im Wettbewerb um Talente." },
+        { title: "Best Practices extern teilen", time: "laufend", impact: "Positioniert HR als Thought Leader und stärkt die Arbeitgebermarke durch externes Teilen von Expertise." },
+      ],
+    },
+  },
+  "Datenbasierte Steuerung": {
+    critical: {
+      description: "Ohne klare Kennzahlen läuft Recruiting auf Sicht. Wo es hakt, wie lange es dauert, was es kostet – das bleibt unklar. Entscheidungen basieren auf Bauchgefühl statt auf Fakten.",
+      quickWins: [
+        { title: "Top 5 Recruiting-KPIs definieren", time: "1 Woche", impact: "Schafft eine gemeinsame KPI-Basis zwischen HR und Geschäftsführung und erhöht die strategische Relevanz des Recruitings." },
+        { title: "Einfaches Tracking in Excel starten", time: "2 Wochen", impact: "Schneller Aufbau einer belastbaren Datenbasis ohne Tool-Investition. Grundlage für spätere Automatisierung und KPI-Steuerung." },
+        { title: "Time-to-Hire für letzte 10 Einstellungen erfassen", time: "1 Tag", impact: "Schafft eine realistische Baseline und macht Optimierungspotenzial sofort sichtbar." },
+      ],
+      midTerm: [
+        { title: "Recruiting-Dashboard aufbauen", time: "6 Wochen", impact: "Macht Recruiting-Leistung für das Management transparent und reduziert den Aufwand für Reporting erheblich." },
+        { title: "Source-of-Hire tracken", time: "2 Monate", impact: "Zeigt, welche Kanäle wirklich funktionieren und ist die Basis für gezielte Budgetentscheidungen." },
+        { title: "Conversion-Funnel aufbauen", time: "3 Monate", impact: "Zeigt an welchen Prozessschritten Kandidaten abspringen und wo der größte Optimierungshebel liegt." },
+        { title: "Predictive Analytics einführen", time: "6-12 Monate", impact: "Ermöglicht vorausschauende Personalplanung auf Basis historischer Daten und reduziert reaktive Engpasssteuerung." },
+      ],
+    },
+    developing: {
+      description: "Sie messen einige KPIs aber nutzen die Daten nicht konsequent für Entscheidungen. Reporting ist unregelmäßig. Benchmarks fehlen.",
+      quickWins: [
+        { title: "Monatliches Reporting an Management etablieren", time: "2 Wochen", impact: "Etabliert regelmäßige Transparenz über Recruiting-Kennzahlen und stärkt die Entscheidungsgrundlage für Budget- und Ressourcenplanung." },
+        { title: "Benchmarks recherchieren", time: "1 Woche", impact: "Ermöglicht eine fundierte Einordnung der Recruiting-Performance im Marktvergleich und stärkt die Argumentationsbasis gegenüber dem Management." },
+      ],
+      midTerm: [
+        { title: "A/B-Tests für Stellenanzeigen durchführen", time: "3 Monate", impact: "Ersetzt Annahmen durch messbare Erkenntnisse und verbessert die Anzeigenperformance systematisch." },
+        { title: "Quality-of-Hire messen", time: "6-12 Monate", impact: "Schafft Transparenz über den langfristigen Wert von Einstellungen und stärkt die Argumentationsbasis für Investitionen im Bereich Recruiting." },
+      ],
+    },
+    strong: {
+      description: "Sie steuern Recruiting datenbasiert. KPIs sind etabliert, Reporting läuft, Entscheidungen basieren auf Fakten. Vorbildlich!",
+      optimization: [
+        { title: "Advanced Analytics testen", time: "6 Monate", impact: "Erweitert die Recruiting-Steuerung um datenbasierte Analysemodelle und verbessert die Prognosefähigkeit bei Auswahl- und Besetzungsentscheidungen." },
+        { title: "Externe Benchmarking-Studien beitreten", time: "laufend", impact: "Erweitert die Argumentationsgrundlage gegenüber der Geschäftsführung durch valide Markt- und Vergleichsdaten." },
+      ],
+    },
+  },
+  "Team & Kompetenzen": {
+    critical: {
+      description: "Recruiting-Qualität leidet massiv. Kandidaten bekommen schlechte Experience. Ihr Team brennt aus. Strategische Themen bleiben liegen.",
+      quickWins: [
+        { title: "Recruiting-Ressourcen kalkulieren", time: "1 Woche", impact: "Macht den tatsächlichen Ressourcenbedarf sichtbar und schafft eine sachliche Grundlage für Gespräche mit der Geschäftsführung." },
+        { title: "Externe Unterstützung evaluieren", time: "2 Wochen", impact: "Verschafft kurzfristig Kapazität und bringt externe Expertise ins Team, ohne dass langfristige Fixkosten entstehen." },
+        { title: "Hiring-Manager-Training buchen", time: "1 Tag", impact: "Erhöht die Qualität von Einstellungsentscheidungen durch strukturierte Interviewführung und reduziert Fehlbesetzungen messbar." },
+      ],
+      midTerm: [
+        { title: "Dedicated Recruiting-Rolle schaffen", time: "3-6 Monate", impact: "Legt die Grundlage für professionelles Recruiting mit klarer Verantwortung, Fokus und Kontinuität." },
+        { title: "Recruiting-Kompetenzen im HR-Team systematisch ausbauen", time: "2 Monate", impact: "Stärkt interne Recruiting-Fähigkeiten und reduziert Abhängigkeit von externen Dienstleistern." },
+        { title: "Wöchentliches Recruiting-Meeting etablieren", time: "laufend", impact: "Sorgt für konsistentes Alignment zwischen HR und Fachbereichen und verhindert Informationsverluste bei offenen Positionen." },
+        { title: "Recruiting-Team aufbauen", time: "12 Monate", impact: "Etabliert eine belastbare Organisationsstruktur für kontinuierliche Recruiting-Performance." },
+      ],
+    },
+    developing: {
+      description: "Es gibt Recruiting-Verantwortliche aber Kapazität ist knapp. Training fehlt teilweise. Strategisches Recruiting kommt zu kurz.",
+      quickWins: [
+        { title: "Recruiting-Prozess-Workshop mit Hiring Managern", time: "1 Tag", impact: "Schafft ein gemeinsames Rollenverständnis zwischen HR und Fachbereichen und reduziert Reibungsverluste im Prozess." },
+        { title: "Strukturierte Interview-Leitfäden erstellen", time: "2 Wochen", impact: "Standardisiert Interviews und reduziert Streuung in der Bewertung zwischen verschiedenen Entscheidern." },
+      ],
+      midTerm: [
+        { title: "Recruiting-Entwicklungsprogramm aufsetzen", time: "6 Monate", impact: "Entwickelt Recruiting von operativer Abwicklung hin zu klarer Prozess- und Steuerungsverantwortung." },
+        { title: "Recruiting-Trends systematisch verfolgen", time: "laufend", impact: "Stellt sicher, dass das Team neue Methoden und Technologien frühzeitig bewertet und nicht reaktiv nachjustiert." },
+      ],
+    },
+    strong: {
+      description: "Ihr Recruiting-Team ist professionell aufgestellt. Dedizierte Rollen, gutes Know-how, ausreichend Kapazität. Top!",
+      optimization: [
+        { title: "Recruiting-Community aufbauen", time: "laufend", impact: "Positioniert HR als Thought Leader im Recruiting und generiert durch Netzwerkeffekte kontinuierlich neue Impulse." },
+        { title: "Innovation Lab für neue Recruiting-Ansätze", time: "6 Monate", impact: "Schafft einen strukturierten Rahmen für Experimente, in dem neue Tools und Ansätze systematisch getestet werden, statt sie zufällig einzuführen." },
+      ],
+    },
+  },
+  "Kulturelle Verankerung": {
+    critical: {
+      description: "Ohne Top-Management-Support bleiben alle Recruiting-Optimierungen Flickwerk. Sie verlieren im War for Talent gegen Unternehmen die Recruiting ernst nehmen.",
+      quickWins: [
+        { title: "1-Pager für Geschäftsführung erstellen", time: "1 Woche", impact: "Macht den finanziellen Effekt offener Vakanzen transparent und stärkt die Argumentationsbasis für Ressourcen- und Prozessentscheidungen." },
+        { title: "Recruiting als Agendapunkt etablieren", time: "sofort", impact: "Verankert Recruiting dauerhaft auf der Management-Agenda – eine kleine Investition mit großer Signalwirkung." },
+        { title: "Monatliches Dashboard für GF", time: "2 Wochen", impact: "Schafft Transparenz auf Geschäftsführungsebene und positioniert HR als datengetriebene Funktion." },
+      ],
+      midTerm: [
+        { title: "Employer-Branding-Budget definieren", time: "1 Monat", impact: "Überführt Employer Branding von einer Absichtserklärung in eine steuerbare, budgetierte Funktion." },
+        { title: "Mitarbeiter-Referral-Programm starten", time: "2 Monate", impact: "Aktiviert das eigene Netzwerk als Recruiting-Kanal, wodurch sich die Qualität der Bewerber und die Besetzungsgeschwindigkeit verbessern." },
+        { title: "GF bei Key-Hires einbinden", time: "laufend", impact: "Sendet ein klares Signal an Top-Kandidaten und schärft gleichzeitig das Recruiting-Verständnis auf Führungsebene." },
+        { title: "Strukturiertes Preboarding aufsetzen", time: "6 Wochen", impact: "Reduziert Frühfluktuation und verkürzt die Zeit bis zur produktiven Einsatzfähigkeit neuer Mitarbeitender." },
+        { title: "Employer-Branding-Kampagne starten", time: "6-12 Monate", impact: "Erhöht die systematische Arbeitgeber-Sichtbarkeit und stärkt den nachhaltigen Bewerberzufluss." },
+        { title: "Recruiting in Unternehmensstrategie verankern", time: "6 Monate", impact: "Positioniert Recruiting als strategische Kernfunktion mit klaren Zielen, Budgetverantwortung und Management-Commitment." },
+      ],
+    },
+    developing: {
+      description: "Recruiting wird als wichtig gesehen aber noch nicht voll gelebt. Employer Branding ist vorhanden aber ausbaufähig.",
+      quickWins: [
+        { title: "Mitarbeitende für Social-Media-Sharing aktivieren", time: "2 Wochen", impact: "Authentische Empfehlungen aus dem eigenen Team vervielfachen die Reichweite offener Stellen ohne Mediabudget." },
+        { title: "Onboarding-Feedback einholen", time: "1 Woche", impact: "Liefert konkrete Verbesserungsimpulse aus der Perspektive neuer Mitarbeitender und bildet damit die Grundlage für kontinuierliche Optimierung." },
+      ],
+      midTerm: [
+        { title: "Employer-Value-Proposition schärfen", time: "3 Monate", impact: "Schafft eine klare, differenzierte Arbeitgeberpositionierung als Grundlage für alle Recruiting- und Employer-Branding-Maßnahmen." },
+        { title: "Employer-Branding-Content-Plan erstellen", time: "2 Monate", impact: "Sorgt für eine kontinuierliche Präsenz als Arbeitgeber – unabhängig davon, ob gerade aktiv rekrutiert wird oder nicht." },
+      ],
+    },
+    strong: {
+      description: "Recruiting ist kulturell verankert. Geschäftsführung lebt es vor. Employer Branding ist stark. Mitarbeitende sind Markenbotschafter. Weltklasse!",
+      optimization: [
+        { title: "Best-Workplace-Zertifizierung anstreben", time: "12 Monate", impact: "Liefert externe Validierung der Arbeitgeberqualität und schafft ein glaubwürdiges Differenzierungsmerkmal im Wettbewerb um Talente." },
+        { title: "Corporate Influencer aufbauen", time: "6 Monate", impact: "Steigert Sichtbarkeit und Arbeitgeberattraktivität durch systematisch aktivierte interne Multiplikatoren." },
+      ],
+    },
+  },
+};
+
+let currentDimension = 0;
+let answers = {};
+let showResults = false;
+
+function getRecommendation(score) {
+  if (score <= 20) {
+    return { status: "KRITISCH", color: "#DC2626", emoji: "🚨", description: "Ihr Recruiting-System reagiert nur auf akute Probleme. Ohne strukturelle Verbesserungen wird es schwer, Top-Talente zu gewinnen." };
+  } else if (score <= 36) {
+    return { status: "ENTWICKLUNGSBEDARF", color: "#F59E0B", emoji: "⚠️", description: "Ihr Recruiting-System funktioniert im Alltag, aber ineffizient. Es gibt klare Schwachstellen, die Sie kurzfristig angehen sollten." };
+  } else if (score <= 48) {
+    return { status: "OPTIMIERUNGSPOTENZIAL", color: "#EAB308", emoji: "📈", description: "Ihr Recruiting-System funktioniert, hat aber noch Lücken. Mit gezielten Optimierungen kommen Sie auf das nächste Level." };
+  } else {
+    return { status: "GUT AUFGESTELLT", color: "#10B981", emoji: "✅", description: "Ihr Recruiting-System ist professionell. Sie gehören zu den Top 10% der mittelständischen Unternehmen!" };
+  }
+}
+
+function getTotalScore() {
+  return Object.values(answers).reduce((sum, val) => sum + val, 0);
+}
+
+function getDimensionScore(dimIndex) {
+  let score = 0;
+  dimensions[dimIndex].questions.forEach((_, qIndex) => {
+    score += answers[`${dimIndex}-${qIndex}`] || 0;
+  });
+  return score;
+}
+
+function getDimensionStatus(score) {
+  if (score <= 4) return 'critical';
+  if (score <= 6) return 'developing';
+  return 'strong';
+}
+
+function getPrioritizedDimensions() {
+  const dimensionScores = dimensions.map((dim, idx) => ({
+    index: idx,
+    name: dim.title,
+    score: getDimensionScore(idx),
+    status: getDimensionStatus(getDimensionScore(idx))
+  }));
+  return dimensionScores.sort((a, b) => {
+    if (a.status === 'critical' && b.status !== 'critical') return -1;
+    if (a.status !== 'critical' && b.status === 'critical') return 1;
+    if (a.status === 'developing' && b.status === 'strong') return -1;
+    if (a.status === 'strong' && b.status === 'developing') return 1;
+    return a.score - b.score;
+  });
+}
+
+function isCurrentDimensionComplete() {
+  const currentQuestions = dimensions[currentDimension].questions;
+  return currentQuestions.every((_, idx) => answers[`${currentDimension}-${idx}`] !== undefined);
+}
+
+function handleAnswer(questionIndex, value) {
+  const key = `${currentDimension}-${questionIndex}`;
+  answers[key] = value;
+  render();
+}
+
+function goToNextDimension() {
+  if (currentDimension < dimensions.length - 1) {
+    currentDimension++;
+    render();
+  } else {
+    showResults = true;
+    render();
+    trackResult('view');
+  }
+}
+
+function goToPreviousDimension() {
+  if (currentDimension > 0) {
+    currentDimension--;
+    render();
+  }
+}
+
+function renderActionField(dim) {
+  const dimName = dim.name;
+  const score = dim.score;
+  const status = dim.status;
+  const rec = recommendations[dimName][status];
+  if (!rec) return '';
+
+  const icon = status === 'critical' ? '🚨' : (status === 'developing' ? '⚠️' : '✅');
+  const statusText = status === 'critical' ? 'KRITISCH' : (status === 'developing' ? 'ENTWICKLUNGSBEDARF' : 'STÄRKE');
+
+  return `
+    <div class="action-field">
+      <div class="action-field-header">
+        <span class="action-field-icon">${icon}</span>
+        <div>
+          <div class="action-field-title">${statusText}: ${dimName} (${score}/10)</div>
+        </div>
+      </div>
+      <div class="action-field-why">
+        <strong>Warum das wichtig ist:</strong><br>
+        ${rec.description}
+      </div>
+      ${rec.quickWins && rec.quickWins.length > 0 ? `
+      <div class="action-section">
+        <div class="action-section-title">⚡ SOFORT UMSETZBAR:</div>
+        <div class="action-item">
+          <div class="action-item-title">${rec.quickWins[0].title}</div>
+          <div class="action-item-meta">⏱ ${rec.quickWins[0].time}</div>
+          <div class="action-item-impact">→ ${rec.quickWins[0].impact}</div>
+        </div>
+      </div>` : ''}
+      ${rec.optimization && rec.optimization.length > 0 ? `
+      <div class="action-section">
+        <div class="action-section-title">🚀 NÄCHSTER SCHRITT:</div>
+        <div class="action-item">
+          <div class="action-item-title">${rec.optimization[0].title}</div>
+          <div class="action-item-meta">⏱ ${rec.optimization[0].time}</div>
+          <div class="action-item-impact">→ ${rec.optimization[0].impact}</div>
+        </div>
+      </div>` : ''}
+      <div style="margin-top: 16px; padding: 14px; background: #fdf2f8; border-radius: 8px; text-align: center; font-size: 14px; color: #C4658C; font-weight: 600;">
+        + weitere Maßnahmen in der vollständigen Analyse per Mail
+      </div>
+    </div>
+  `;
+}
+
+function renderResults() {
+  const totalScore = getTotalScore();
+  const result = getRecommendation(totalScore);
+  const prioritized = getPrioritizedDimensions();
+  const actionDimensions = prioritized.filter(d => d.status === 'critical' || d.status === 'developing').slice(0, 3);
+  const strengths = prioritized.filter(d => d.status === 'strong');
+
+  return `
+    <div class="results-container">
+      <h1 class="results-title">Ihre Scorecard</h1>
+      <div class="results-score" style="color: ${result.color}">${totalScore} / 60</div>
+      <div class="results-label">Punkte</div>
+      <div class="results-card">
+        <div class="results-header">
+          <span class="results-emoji">${result.emoji}</span>
+          <h2 class="results-status" style="color: ${result.color}">${result.status}</h2>
+        </div>
+        <p class="results-description">${result.description}</p>
+      </div>
+      <div class="results-card">
+        <h3 style="font-size: 28px; font-weight: bold; color: #1e3a5f; margin-bottom: 24px;">
+          🎯 Ihre Top ${actionDimensions.length} Handlungsfelder
+        </h3>
+        ${actionDimensions.map((dim, idx) => `
+          <div style="margin-bottom: 8px;">
+            <strong style="font-size: 20px; color: #1e3a5f;">#${idx + 1}</strong>
+          </div>
+          ${renderActionField(dim)}
+        `).join('')}
+      </div>
+      ${strengths.length > 0 ? `
+      <div class="results-card">
+        <div class="strengths-section">
+          <div class="strengths-title">💪 Ihre Stärken – Darauf können Sie aufbauen</div>
+          ${strengths.map(s => `
+            <div class="strength-item">
+              ✅ <strong>${s.name}</strong> (${s.score}/10) – ${recommendations[s.name].strong.description}
+            </div>
+          `).join('')}
+        </div>
+      </div>` : ''}
+      <div class="results-card">
+        <h3 style="font-size: 24px; font-weight: bold; color: #1e3a5f; margin-bottom: 24px;">
+          Ihre Bewertung nach Dimensionen
+        </h3>
+        <div class="dimension-scores">
+          ${dimensions.map((dim, idx) => {
+            const score = getDimensionScore(idx);
+            const percentage = (score / 10) * 100;
+            return `
+              <div class="dimension-score-item">
+                <div class="dimension-score-header">
+                  <span class="dimension-score-name">${dim.title}</span>
+                  <span class="dimension-score-value">${score} / 10</span>
+                </div>
+                <div class="dimension-score-bar-bg">
+                  <div class="dimension-score-bar-fill" style="width: ${percentage}%"></div>
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+      <div class="results-card" style="background: #fdf2f8; border: 2px solid #C4658C;">
+        <h3 style="font-size: 22px; font-weight: bold; color: #1e3a5f; margin-bottom: 12px;">
+          📋 Vollständige Analyse mit allen Maßnahmen per Mail erhalten
+        </h3>
+        <p style="font-size: 16px; color: #475569; margin-bottom: 16px; line-height: 1.5;">
+          Alle Quick Wins, mittelfristigen Maßnahmen und strategischen Empfehlungen – priorisiert nach Ihrem Ergebnis. Kostenlos, kein Verkaufsgespräch.
+        </p>
+        <label style="display:flex; gap:10px; align-items:flex-start; margin-bottom: 14px; color:#0f172a; font-weight:600; line-height: 1.35;">
+          <input type="checkbox" id="sendScorecardOptIn" onchange="toggleSendScorecardUI()" style="margin-top: 3px;" />
+          Ja, ich möchte die vollständige Analyse per Mail erhalten.
+        </label>
+        <input
+          type="email"
+          id="userEmail"
+          placeholder="ihre.email@firma.de"
+          oninput="toggleSendScorecardUI()"
+          style="width: 100%; padding: 14px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 16px; margin-bottom: 12px;"
+        />
+        <button
+          id="sendScorecardBtn"
+          onclick="submitScorecardToMicrosoftForms()"
+          class="nav-button next"
+          style="width: 100%; border-radius: 10px; font-size: 18px; padding: 18px;"
+          disabled
+        >
+          Vollständige Analyse per Mail erhalten →
+        </button>
+        <div id="sendScorecardHint" style="margin-top: 10px; font-size: 14px; color: #64748b; line-height: 1.4; text-align: center;">
+          Falls Sie keine E-Mail erhalten, prüfen Sie bitte auch Ihren Spam-Ordner.
+        </div>
+      </div>
+      <div style="text-align: center;">
+        <button onclick="handleBookingClick()" class="cta-button" style="border: none; cursor: pointer;">
+          ERSTGESPRÄCH BUCHEN
+        </button>
+        <div class="cta-subtext">Kostenfrei • 30 Minuten • Unverbindlich</div>
+        <div style="margin-top: 12px; font-size: 15px; color: #64748b; font-style: italic;">
+          Kein Verkaufsgespräch. Nur eine ehrliche Einschätzung.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderQuestions() {
+  const dimension = dimensions[currentDimension];
+  const progress = ((currentDimension + 1) / dimensions.length) * 100;
+  const isComplete = isCurrentDimensionComplete();
+
+  return `
+    <div class="progress-bar-container">
+      <div class="progress-info">
+        <span>Dimension ${currentDimension + 1} von ${dimensions.length}</span>
+        <span>${Math.round(progress)}% abgeschlossen</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" style="width: ${progress}%"></div>
+      </div>
+    </div>
+    <h2 class="dimension-title">${dimension.title}</h2>
+    <div class="questions-container">
+      ${dimension.questions.map((question, idx) => {
+        const key = `${currentDimension}-${idx}`;
+        const value = answers[key];
+        return `
+          <div class="question-block">
+            <div class="question-text">${idx + 1}. ${question}</div>
+            <div class="answer-buttons">
+              <button class="answer-button ${value === 2 ? 'selected' : ''}" onclick="handleAnswer(${idx}, 2)">✓ Ja, etabliert</button>
+              <button class="answer-button ${value === 1 ? 'selected' : ''}" onclick="handleAnswer(${idx}, 1)">⚡ In Arbeit</button>
+              <button class="answer-button ${value === 0 ? 'selected' : ''}" onclick="handleAnswer(${idx}, 0)">✗ Nein</button>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+    <div class="navigation">
+      <button class="nav-button back" onclick="goToPreviousDimension()" ${currentDimension === 0 ? 'disabled' : ''}>← Zurück</button>
+      <button class="nav-button next" onclick="goToNextDimension()" ${!isComplete ? 'disabled' : ''}>
+        ${currentDimension === dimensions.length - 1 ? 'Auswertung anzeigen' : 'Weiter'} →
+      </button>
+    </div>
+  `;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  app.innerHTML = showResults ? renderResults() : renderQuestions();
+}
+
+render();
+
+function isValidEmail(email) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email || '').trim());
+}
+
+function toggleSendScorecardUI() {
+  const optIn = document.getElementById('sendScorecardOptIn')?.checked;
+  const email = document.getElementById('userEmail')?.value || '';
+  const btn = document.getElementById('sendScorecardBtn');
+  if (!btn) return;
+  btn.disabled = !(optIn && isValidEmail(email));
+}
+
+const MS_FORM_BASE_URL = "https://forms.office.com/Pages/ResponsePage.aspx?id=XeoTJvXfN0CnimDChZTDrLOSLn6UbbVLqY9VAedqBjdUMkpNNjQ4TFFENlQ1MDdRUjZRVjdXUjU1NC4u";
+
+const MS_FORM_FIELD_IDS = {
+  email: "rde2c0f2da23841df977e4d7021be0ad0",
+  total: "r20bb2a170c5f45a2ae2a7f82202ba93e",
+  status: "rfba8721dd0a348768d533a0a04370ef3",
+  details: "rd7ef2f3838354dbab201bd76c779461e",
+  handlungsfeld1: "rb229d2210f83492fba33110f5bbdbc48",
+  handlungsfeld2: "r8cfddab73f0d40f6b197ddae77ca2f18",
+  handlungsfeld3: "rda9bf336d8d942dc83e4e8c2c5e416e6",
+  staerken: "r897954c6690a472da82a991591e0477d"
+};
+
+function formatDimensionOverview() {
+  const dimNames = ["Prozessklarheit", "Digitalisierung & Tools", "Candidate Experience", "Datenbasierte Steuerung", "Team & Kompetenzen", "Kulturelle Verankerung"];
+  const lines = [];
+  lines.push("DIMENSIONEN:");
+  for (let i = 0; i < 6; i++) {
+    const score = getDimensionScore(i);
+    const status = score <= 4 ? 'Kritisch' : (score <= 6 ? 'Entwicklung' : 'Stark');
+    lines.push(`${dimNames[i]}: ${score}/10 (${status})`);
+  }
+  lines.push("");
+  let weakestIdx = 0;
+  let weakestScore = getDimensionScore(0);
+  for (let i = 1; i < 6; i++) {
+    const s = getDimensionScore(i);
+    if (s < weakestScore) { weakestScore = s; weakestIdx = i; }
+  }
+  lines.push(`Groesster Handlungsbedarf: ${dimNames[weakestIdx]} (${weakestScore}/10)`);
+  return lines.join("\n");
+}
+
+function formatHandlungsfeld(dim) {
+  const rec = recommendations[dim.name][dim.status];
+  if (!rec) return '';
+  const statusText = dim.status === 'critical' ? 'KRITISCH' : (dim.status === 'developing' ? 'ENTWICKLUNGSBEDARF' : 'STARK');
+  const lines = [];
+  lines.push(`${statusText}: ${dim.name} (${dim.score}/10)`);
+  lines.push("");
+  lines.push("Warum das wichtig ist:");
+  lines.push(rec.description);
+  lines.push("");
+  if (rec.quickWins && rec.quickWins.length > 0) {
+    lines.push("QUICK WINS:");
+    rec.quickWins.forEach(action => {
+      lines.push(`- ${action.title} (${action.time})`);
+      lines.push(`  ${action.impact}`);
+    });
+    lines.push("");
+  }
+  if (rec.midTerm && rec.midTerm.length > 0) {
+    lines.push("MITTELFRISTIG:");
+    rec.midTerm.forEach(action => {
+      lines.push(`- ${action.title} (${action.time})`);
+      lines.push(`  ${action.impact}`);
+    });
+  }
+  if (rec.optimization && rec.optimization.length > 0) {
+    lines.push("OPTIMIERUNG:");
+    rec.optimization.forEach(action => {
+      lines.push(`- ${action.title} (${action.time})`);
+      lines.push(`  ${action.impact}`);
+    });
+  }
+  return lines.join("\n");
+}
+
+function formatStaerken(strengths) {
+  if (strengths.length === 0) return 'Keine ausgeprägten Stärken identifiziert – alle Dimensionen haben Entwicklungspotenzial.';
+  const lines = [];
+  strengths.forEach(s => {
+    lines.push(`${s.name} (${s.score}/10)`);
+    lines.push(`${recommendations[s.name].strong.description}`);
+    lines.push("");
+  });
+  return lines.join("\n");
+}
+
+function submitScorecardToMicrosoftForms() {
+  const optIn = document.getElementById('sendScorecardOptIn')?.checked;
+  const email = document.getElementById('userEmail')?.value || '';
+  if (!optIn) { alert("Bitte Häkchen setzen, wenn Sie die Scorecard per E-Mail möchten."); return; }
+  if (!isValidEmail(email)) { alert("Bitte eine gültige E-Mail-Adresse eintragen."); return; }
+  trackResult('mail');
+  const totalScore = getTotalScore();
+  const rec = getRecommendation(totalScore);
+  const prioritized = getPrioritizedDimensions();
+  const actionDimensions = prioritized.filter(d => d.status === 'critical' || d.status === 'developing').slice(0, 3);
+  const strengths = prioritized.filter(d => d.status === 'strong');
+
+  const params =
+    `&${MS_FORM_FIELD_IDS.email}=${encodeURIComponent(email)}` +
+    `&${MS_FORM_FIELD_IDS.total}=${encodeURIComponent(totalScore + "/60")}` +
+    `&${MS_FORM_FIELD_IDS.status}=${encodeURIComponent(rec.status)}` +
+    `&${MS_FORM_FIELD_IDS.details}=${encodeURIComponent(formatDimensionOverview())}` +
+    `&${MS_FORM_FIELD_IDS.handlungsfeld1}=${encodeURIComponent(actionDimensions[0] ? formatHandlungsfeld(actionDimensions[0]) : '')}` +
+    `&${MS_FORM_FIELD_IDS.handlungsfeld2}=${encodeURIComponent(actionDimensions[1] ? formatHandlungsfeld(actionDimensions[1]) : '')}` +
+    `&${MS_FORM_FIELD_IDS.handlungsfeld3}=${encodeURIComponent(actionDimensions[2] ? formatHandlungsfeld(actionDimensions[2]) : '')}` +
+    `&${MS_FORM_FIELD_IDS.staerken}=${encodeURIComponent(formatStaerken(strengths))}`;
+
+  const prefilledUrl = MS_FORM_BASE_URL + params;
+  alert("Fast fertig: Das Formular öffnet sich vorausgefüllt. Bitte einmal absenden, dann kommt die E-Mail.");
+  window.open(prefilledUrl, "_blank", "noopener,noreferrer");
+}
+
+function handleBookingClick() {
+  trackResult('termin');
+  window.open("https://calendly.com/hiringlab_erstgespraech/30min", "_blank", "noopener,noreferrer");
+}
+
+function trackResult(action) {
+  const totalScore = getTotalScore();
+  const result = getRecommendation(totalScore);
+  const dimNames = ["Prozessklarheit", "Digitalisierung & Tools", "Candidate Experience", "Datenbasierte Steuerung", "Team & Kompetenzen", "Kulturelle Verankerung"];
+  
+  const payload = {
+    timestamp: new Date().toISOString(),
+    action: action,
+    total_score: totalScore,
+    status: result.status,
+    scores: {},
+    antworten: {}
+  };
+
+  // Dimension scores
+  dimNames.forEach((name, idx) => {
+    payload.scores[name] = getDimensionScore(idx);
+  });
+
+  // Individual question answers
+  dimNames.forEach((dimName, dimIdx) => {
+    dimensions[dimIdx].questions.forEach((question, qIdx) => {
+      const key = `${dimIdx}-${qIdx}`;
+      const value = answers[key];
+      const label = value === 2 ? 'Ja, etabliert' : (value === 1 ? 'In Arbeit' : 'Nein');
+      payload.antworten[`${dimName} – F${qIdx + 1}`] = label;
+    });
+  });
+
+  const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/64bune5t6s1posv6tr5svxb0xxuj1cwg";
+  if (MAKE_WEBHOOK_URL !== "MAKE_WEBHOOK_URL_HIER_EINTRAGEN") {
+    fetch(MAKE_WEBHOOK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  }
+}
+</script>
+</body>
+</html>
