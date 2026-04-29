@@ -451,55 +451,71 @@ body {
 // ══════════════════════════════════════════
 const MAKE_WEBHOOK_URL = "https://hook.eu2.make.com/s5ipivd2w8ve6cctk5714d6tynxg5jr2";
 
-const ANSWER_LABELS = [
-  { value: 1, short: "Nicht vorhanden", long: "Nicht vorhanden / kein klares Bewusstsein" },
-  { value: 2, short: "Erste Ansätze", long: "Erste Ansätze vorhanden, aber nicht systematisch" },
-  { value: 3, short: "Teilweise etabliert", long: "Vorhanden und teilweise gelebt" },
-  { value: 4, short: "Systematisch verankert", long: "Systematisch, dokumentiert und kontinuierlich verbessert" }
-];
+const LABEL_TYPES = {
+  A: [
+    { value: 1, short: "Nicht vorhanden", long: "Nicht vorhanden, kein klares Bewusstsein" },
+    { value: 2, short: "Erste Ansätze", long: "Erste Ansätze vorhanden, aber nicht systematisch" },
+    { value: 3, short: "Teilweise etabliert", long: "Vorhanden und teilweise gelebt" },
+    { value: 4, short: "Systematisch verankert", long: "Systematisch, dokumentiert und kontinuierlich verbessert" }
+  ],
+  B: [
+    { value: 1, short: "Trifft nicht zu", long: "Trifft auf unser Unternehmen nicht zu" },
+    { value: 2, short: "Trifft kaum zu", long: "Trifft in Ausnahmen zu, aber nicht verlässlich" },
+    { value: 3, short: "Trifft überwiegend zu", long: "Trifft in den meisten Fällen zu" },
+    { value: 4, short: "Trifft voll zu", long: "Trifft durchgehend und verlässlich zu" }
+  ],
+  C: [
+    { value: 1, short: "Nie", long: "Findet nicht statt" },
+    { value: 2, short: "Selten", long: "Kommt gelegentlich vor, aber ohne System" },
+    { value: 3, short: "Regelmäßig", long: "Findet regelmäßig statt" },
+    { value: 4, short: "Systematisch", long: "Fest verankert und kontinuierlich" }
+  ]
+};
+
+const ANSWER_LABELS = LABEL_TYPES.A;
 
 const dimensions = [
   { title: "Prozessklarheit", questions: [
-    "Unser Recruiting-Prozess ist dokumentiert UND wird von allen Beteiligten aktiv genutzt.",
-    "Wenn jemand Neues ins Recruiting-Team kommt, kann diese Person innerhalb von 2 Wochen eigenständig arbeiten.",
-    "Entscheidungen im Recruiting-Prozess werden innerhalb von 48 Stunden getroffen.",
-    "Informationen fließen ohne manuelles Übertragen zwischen den Prozessschritten.",
-    "Wir haben unseren Recruiting-Prozess in den letzten 12 Monaten mindestens einmal überarbeitet."
+    { text: "Unser Recruiting-Prozess ist dokumentiert UND wird von allen Beteiligten aktiv genutzt.", type: "A" },
+    { text: "Wenn jemand Neues ins Recruiting-Team kommt, kann diese Person innerhalb von 2 Wochen eigenständig arbeiten.", type: "B" },
+    { text: "Entscheidungen im Recruiting-Prozess werden innerhalb von 48 Stunden getroffen.", type: "B" },
+    { text: "Informationen fließen ohne manuelles Übertragen zwischen den Prozessschritten.", type: "B" },
+    { text: "Wir haben unseren Recruiting-Prozess in den letzten 12 Monaten mindestens einmal überarbeitet.", type: "B" }
   ]},
   { title: "Digitalisierung & Tools", questions: [
-    "Unser ATS/Recruiting-System ist die einzige Quelle der Wahrheit für alle Recruiting-Aktivitäten (keine Parallel-Excel, keine E-Mail-Schleifen).",
-    "Wiederkehrende Aufgaben im Recruiting (z.\u202fB. Statusmails, Erinnerungen, Terminfindung) laufen automatisiert ab, nicht manuell.",
-    "Kandidaten können sich über jedes Gerät in unter 5 Minuten bewerben.",
-    "Unsere Recruiting-Tools sind miteinander verbunden. Daten fließen automatisch, ohne Copy-Paste zwischen Systemen.",
-    "Wir haben in den letzten 12 Monaten mindestens eine Prozessverbesserung durch Digitalisierung umgesetzt."
+    { text: "Unser ATS/Recruiting-System ist die einzige Quelle der Wahrheit für alle Recruiting-Aktivitäten (keine Parallel-Excel, keine E-Mail-Schleifen).", type: "B" },
+    { text: "Wiederkehrende Aufgaben im Recruiting (z.\u202fB. Statusmails, Erinnerungen, Terminfindung) laufen automatisiert ab, nicht manuell.", type: "A" },
+    { text: "Kandidaten können sich über jedes Gerät in unter 5 Minuten bewerben.", type: "B" },
+    { text: "Unsere Recruiting-Tools sind miteinander verbunden. Daten fließen automatisch, ohne Copy-Paste zwischen Systemen.", type: "B" },
+    { text: "Wir haben in den letzten 12 Monaten mindestens eine Prozessverbesserung durch Digitalisierung umgesetzt.", type: "B" }
   ]},
   { title: "Candidate Experience", questions: [
-    "Bewerber erhalten innerhalb von 48 Stunden eine erste inhaltliche Rückmeldung (nicht nur Auto-Reply).",
-    "Der Bewerbungsprozess dauert maximal 5 Minuten UND funktioniert auf dem Smartphone einwandfrei.",
-    "Kandidaten wissen jederzeit, in welcher Phase sie sich befinden und was als Nächstes passiert.",
-    "Wir messen systematisch die Candidate Experience (z.\u202fB. NPS, Feedback-Umfragen) UND leiten daraus Verbesserungen ab.",
-    "Abgelehnte Kandidaten erhalten eine wertschätzende, individuelle Absage und nicht nur eine Standard-Mail."
+    { text: "Bewerber erhalten innerhalb von 48 Stunden eine erste inhaltliche Rückmeldung (nicht nur Auto-Reply).", type: "B" },
+    { text: "Der Bewerbungsprozess dauert maximal 5 Minuten UND funktioniert auf dem Smartphone einwandfrei.", type: "B" },
+    { text: "Kandidaten wissen jederzeit, in welcher Phase sie sich befinden und was als Nächstes passiert.", type: "B" },
+    { text: "Wir messen systematisch die Candidate Experience (z.\u202fB. NPS, Feedback-Umfragen) UND leiten daraus Verbesserungen ab.", type: "A" },
+    { text: "Abgelehnte Kandidaten erhalten eine wertschätzende, individuelle Absage und nicht nur eine Standard-Mail.", type: "B" }
   ]},
   { title: "Datenbasierte Steuerung", questions: [
-    "Wir kennen unsere Time-to-Hire pro Rolle/Abteilung UND nutzen diese Daten aktiv zur Prozessoptimierung.",
-    "Wir kennen die Kosten pro Einstellung (Cost-per-Hire) UND den ROI verschiedener Recruiting-Kanäle.",
-    "Wir analysieren systematisch, an welchen Prozessschritten Kandidaten abspringen UND haben daraus Verbesserungen abgeleitet.",
-    "Wir vergleichen unsere Recruiting-KPIs mit Branchen-Benchmarks oder internen Zielvorgaben.",
-    "Recruiting-Kennzahlen werden monatlich an Geschäftsführung/Management reportet UND fließen in strategische Entscheidungen ein."
+    { text: "Wir kennen unsere Time-to-Hire pro Rolle/Abteilung UND nutzen diese Daten aktiv zur Prozessoptimierung.", type: "A" },
+    { text: "Wir kennen die Kosten pro Einstellung (Cost-per-Hire) UND den ROI verschiedener Recruiting-Kanäle.", type: "A" },
+    { text: "Wir analysieren systematisch, an welchen Prozessschritten Kandidaten abspringen UND haben daraus Verbesserungen abgeleitet.", type: "A" },
+    { text: "Wir vergleichen unsere Recruiting-KPIs mit Branchen-Benchmarks oder internen Zielvorgaben.", type: "C" },
+    { text: "Recruiting-Kennzahlen werden monatlich an Geschäftsführung/Management reportet UND fließen in strategische Entscheidungen ein.", type: "B" }
   ]},
   { title: "Team & Kompetenzen", questions: [
-    "Recruiting ist eine dedizierte Vollzeit-Verantwortung, nicht nur 'nebenbei'.",
-    "Hiring Manager führen strukturierte Interviews anhand klarer Bewertungskriterien.",
-    "HR und Fachabteilungen stimmen sich mindestens wöchentlich zu offenen Positionen ab.",
-    "Unser Recruiting-Team hat neben dem Tagesgeschäft ausreichend Kapazität für strategische Themen wie Sourcing oder Prozessverbesserung.",
-    "Wir testen regelmäßig neue Recruiting-Ansätze (z.\u202fB. neue Kanäle, KI-Tools, Prozess-Experimente) und evaluieren deren Erfolg."
+    { text: "Recruiting ist eine dedizierte Vollzeit-Verantwortung, nicht nur 'nebenbei'.", type: "B" },
+    { text: "Hiring Manager führen strukturierte Interviews anhand klarer Bewertungskriterien.", type: "A" },
+    { text: "HR und Fachabteilungen stimmen sich mindestens wöchentlich zu offenen Positionen ab.", type: "B" },
+    { text: "Unser Recruiting-Team hat neben dem Tagesgeschäft ausreichend Kapazität für strategische Themen wie Sourcing oder Prozessverbesserung.", type: "B" },
+    { text: "Wir testen regelmäßig neue Recruiting-Ansätze (z.\u202fB. neue Kanäle, KI-Tools, Prozess-Experimente) und evaluieren deren Erfolg.", type: "C" }
   ]},
   { title: "Kulturelle Verankerung", questions: [
-    "Recruiting ist regelmäßiger Tagesordnungspunkt in Geschäftsführungs-/Management-Meetings.",
-    "Die Geschäftsführung ist persönlich bei Key-Hires involviert (z.\u202fB. Finalist-Gespräche, strategische Positionen).",
-    "Führungskräfte sehen Recruiting als gemeinsame Verantwortung, nicht als reine HR-Aufgabe.",
-    "Mitarbeitende teilen aktiv offene Stellen in ihren Netzwerken UND werden dafür systematisch aktiviert.",
-    "Employer Branding hat ein dediziertes Budget UND messbare Ziele."
+    { text: "Recruiting ist regelmäßiger Tagesordnungspunkt in Geschäftsführungs-/Management-Meetings.", type: "C" },
+    { text: "Die Geschäftsführung ist persönlich bei Key-Hires involviert (z.\u202fB. Finalist-Gespräche, strategische Positionen).", type: "B" },
+    { text: "Führungskräfte sehen Recruiting als gemeinsame Verantwortung, nicht als reine HR-Aufgabe.", type: "B" },
+    { text: "Mitarbeitende teilen aktiv offene Stellen in ihren Netzwerken UND werden dafür systematisch aktiviert.", type: "B" },
+    { text: "Employer Branding hat ein dediziertes Budget UND messbare Ziele.", type: "A" }
   ]}
 ];
 
@@ -666,12 +682,13 @@ function renderDimension() {
       ${dim.questions.map((q, qIdx) => {
         const key = `${dimIndex}-${qIdx}`;
         const selected = answers[key];
+        const labels = LABEL_TYPES[q.type] || LABEL_TYPES.A;
         return `
           <div class="question-block">
             <div class="question-number">Frage ${qIdx + 1} von ${dim.questions.length}</div>
-            <div class="question-text">${q}</div>
+            <div class="question-text">${q.text}</div>
             <div class="answer-grid">
-              ${ANSWER_LABELS.map(a => `
+              ${labels.map(a => `
                 <button class="answer-btn ${selected === a.value ? 'selected' : ''}" onclick="handleAnswer(${dimIndex}, ${qIdx}, ${a.value})" title="${a.long}">
                   ${a.short}
                   <span class="score-label">${a.value}/4</span>
