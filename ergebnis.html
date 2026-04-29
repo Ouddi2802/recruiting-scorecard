@@ -128,12 +128,12 @@ const data = {
 };
 
 const DIMENSIONS = [
-  { key: 'p', label: 'Prozessklarheit', short: 'Prozessklarheit' },
-  { key: 'd', label: 'Digitalisierung & Tools', short: 'Digitalisierung' },
-  { key: 'c', label: 'Candidate Experience', short: 'Candidate Exp.' },
-  { key: 'ds', label: 'Datenbasierte Steuerung', short: 'Datenbasierte St.' },
-  { key: 't', label: 'Team & Kompetenzen', short: 'Team & Komp.' },
-  { key: 'k', label: 'Kulturelle Verankerung', short: 'Kulturelle Verank.' }
+  { key: 'p', label: 'Prozessklarheit', lines: ['Prozess-', 'klarheit'] },
+  { key: 'd', label: 'Digitalisierung & Tools', lines: ['Digitalisierung', '& Tools'] },
+  { key: 'c', label: 'Candidate Experience', lines: ['Candidate', 'Experience'] },
+  { key: 'ds', label: 'Datenbasierte Steuerung', lines: ['Datenbasierte', 'Steuerung'] },
+  { key: 't', label: 'Team & Kompetenzen', lines: ['Team &', 'Kompetenzen'] },
+  { key: 'k', label: 'Kulturelle Verankerung', lines: ['Kulturelle', 'Verankerung'] }
 ];
 
 function getBarColor(score) {
@@ -160,6 +160,46 @@ function getStatusLabel(status) {
   if (s.includes('OPTIMIERUNG')) return 'Optimierungspotenzial';
   if (s.includes('STARK')) return 'Stark';
   return status;
+}
+
+function getDiagnosticText(key, score) {
+  const avg = score / 5;
+  const texts = {
+    p: {
+      low: 'Recruiting-Prozesse sind nicht dokumentiert oder werden nicht einheitlich gelebt. Im Workshop klären wir: Wo entstehen Brüche?',
+      mid: 'Grundstrukturen vorhanden, aber Übergaben und Entscheidungswege sind noch nicht durchgängig definiert.',
+      high: 'Prozesse sind klar strukturiert und werden aktiv genutzt. Potenzial liegt in der kontinuierlichen Optimierung.'
+    },
+    d: {
+      low: 'Toollandschaft ist fragmentiert, manuelle Schritte dominieren. Leitfrage: Wo verlieren wir täglich Zeit durch fehlende Automatisierung?',
+      mid: 'Einzelne Tools im Einsatz, aber nicht durchgängig vernetzt. Daten werden teilweise manuell übertragen.',
+      high: 'Tools sind integriert und Automatisierung ist etabliert. Nächster Hebel: KI-gestützte Optimierung.'
+    },
+    c: {
+      low: 'Bewerbererlebnis ist nicht gesteuert. Leitfrage: An welchen Stellen verlieren wir Kandidaten, ohne es zu merken?',
+      mid: 'Grundlegende Candidate Journey existiert, aber Feedback-Schleifen und Transparenz sind ausbaufähig.',
+      high: 'Positive Candidate Experience wird aktiv gestaltet und gemessen.'
+    },
+    ds: {
+      low: 'Recruiting-Entscheidungen basieren auf Bauchgefühl. Leitfrage: Welche drei Kennzahlen würden uns am meisten helfen?',
+      mid: 'Einzelne KPIs werden erhoben, aber nicht systematisch zur Steuerung genutzt.',
+      high: 'Datenbasierte Steuerung ist etabliert. Potenzial liegt im Benchmarking und der strategischen Nutzung.'
+    },
+    t: {
+      low: 'Recruiting wird nebenbei erledigt, Kompetenzen sind nicht gezielt aufgebaut. Leitfrage: Wer trägt die Verantwortung?',
+      mid: 'Dedizierte Rollen vorhanden, aber strategische Kapazitäten und Weiterentwicklung fehlen.',
+      high: 'Team ist kompetent aufgestellt und arbeitet strategisch.'
+    },
+    k: {
+      low: 'Recruiting wird als reine HR-Aufgabe gesehen. Leitfrage: Wie involviert ist die Geschäftsführung wirklich?',
+      mid: 'Bewusstsein wächst, aber Recruiting ist noch nicht als strategisches Thema verankert.',
+      high: 'Recruiting ist als gemeinsame Verantwortung anerkannt und strategisch verankert.'
+    }
+  };
+  const t = texts[key] || texts.p;
+  if (avg < 2) return t.low;
+  if (avg < 3) return t.mid;
+  return t.high;
 }
 
 function buildRadarPoints(scores, maxRadius) {
@@ -209,8 +249,8 @@ function render() {
   }
 
   const scores = [data.p, data.d, data.c, data.ds, data.t, data.k];
-  const maxR = 140;
-  const cx = 200, cy = 185;
+  const maxR = 130;
+  const cx = 210, cy = 195;
 
   const radarPts = buildRadarPoints(scores, maxR);
   const radarStr = pointsToString(radarPts);
@@ -236,24 +276,37 @@ function render() {
   });
 
   const labelPositions = [
-    { dx: 0, dy: -maxR - 18, anchor: 'middle' },
-    { dx: maxR + 16, dy: -maxR/2 + 5, anchor: 'start' },
-    { dx: maxR + 16, dy: maxR/2 + 5, anchor: 'start' },
-    { dx: 0, dy: maxR + 24, anchor: 'middle' },
-    { dx: -maxR - 16, dy: maxR/2 + 5, anchor: 'end' },
-    { dx: -maxR - 16, dy: -maxR/2 + 5, anchor: 'end' }
+    { dx: 0, dy: -maxR - 14, anchor: 'middle' },
+    { dx: maxR + 18, dy: -maxR/2 + 2, anchor: 'start' },
+    { dx: maxR + 18, dy: maxR/2 + 2, anchor: 'start' },
+    { dx: 0, dy: maxR + 22, anchor: 'middle' },
+    { dx: -maxR - 18, dy: maxR/2 + 2, anchor: 'end' },
+    { dx: -maxR - 18, dy: -maxR/2 + 2, anchor: 'end' }
   ];
 
   let labelsSVG = '';
   DIMENSIONS.forEach((dim, i) => {
     const pos = labelPositions[i];
-    labelsSVG += `<text class="radar-label" x="${pos.dx}" y="${pos.dy}" text-anchor="${pos.anchor}">${dim.short}</text>`;
+    const line1 = dim.lines[0];
+    const line2 = dim.lines[1];
+    labelsSVG += `<text class="radar-label" x="${pos.dx}" y="${pos.dy - 12}" text-anchor="${pos.anchor}">${line1}</text>`;
+    labelsSVG += `<text class="radar-label" x="${pos.dx}" y="${pos.dy}" text-anchor="${pos.anchor}">${line2}</text>`;
     labelsSVG += `<text class="radar-score" x="${pos.dx}" y="${pos.dy + 12}" text-anchor="${pos.anchor}">${scores[i]} / 20</text>`;
   });
 
-  const sorted = DIMENSIONS.map((dim, i) => ({ ...dim, score: scores[i] })).sort((a, b) => a.score - b.score);
+  const dimResults = DIMENSIONS.map((dim, i) => {
+    const score = scores[i];
+    const avg = score / 5;
+    let stufe, stufeColor;
+    if (avg < 2) { stufe = 'Kritisch'; stufeColor = '#c74f62'; }
+    else if (avg < 3) { stufe = 'Entwicklungsbedarf'; stufeColor = '#d4940a'; }
+    else if (avg < 3.6) { stufe = 'Optimierungspotenzial'; stufeColor = '#2a7d5f'; }
+    else { stufe = 'Stark'; stufeColor = '#142f48'; }
+    return { ...dim, score, avg: avg.toFixed(1), stufe, stufeColor };
+  });
+  const sorted = [...dimResults].sort((a, b) => a.score - b.score);
   const fokus = sorted.slice(0, 2);
-  const fokusText = fokus.map(f => `<strong>${f.label}</strong> (${f.score}/20)`).join(' und ');
+  const staerken = sorted.slice(-2).reverse();
 
   let barsHTML = '';
   DIMENSIONS.forEach((dim, i) => {
@@ -297,7 +350,7 @@ function render() {
     <div class="slide-body">
       <div class="content-grid">
         <div class="chart-col">
-          <svg viewBox="0 0 400 380" style="width:100%; max-width:400px;">
+          <svg viewBox="0 0 420 400" style="width:100%; max-width:420px;">
             <g transform="translate(${cx},${cy})">
               ${gridSVG}
               ${axesSVG}
@@ -311,16 +364,51 @@ function render() {
           <h3>Ergebnis nach Dimension</h3>
           ${barsHTML}
           <div class="legend">
-            <div class="legend-item"><span class="legend-dot" style="background:#c74f62;"></span> Kritisch (&lt;2.0)</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#feda37;"></span> Entwicklung (&lt;3.0)</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#142f48;"></span> Stark (&ge;3.0)</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#c74f62;"></span> &lt;2.0</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#feda37;"></span> &lt;3.0</div>
+            <div class="legend-item"><span class="legend-dot" style="background:#142f48;"></span> &ge;3.0</div>
+            <span style="color: #aaa; font-size: 10px; margin-left: 4px;">(Durchschnitt pro Frage)</span>
           </div>
         </div>
       </div>
 
-      <div class="focus-box">
-        <h3>Fokusfelder im Workshop</h3>
-        <p>${fokusText} zeigen den gr\u00f6\u00dften Handlungsbedarf. Hier setzen wir im Prozess-Workshop (WS2) und in der Analyse (WS3) den Schwerpunkt.</p>
+      <div style="display: flex; gap: 16px; margin-top: 24px;">
+        <div style="flex: 1; padding: 18px; background: #ffffff; border-radius: 8px; border-left: 4px solid #c74f62;">
+          <h3 style="font-family: 'Gilda Display', serif; font-size: 14px; color: #142f48; margin: 0 0 10px; font-weight: 400;">Handlungsfelder</h3>
+          ${fokus.map(f => `
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="font-size: 13px; color: #142f48;">${f.label}</strong>
+                <span style="font-size: 11px; color: ${f.stufeColor}; font-weight: 600;">${f.stufe} (${f.avg})</span>
+              </div>
+              <p style="font-size: 12px; color: #555; margin: 4px 0 0; line-height: 1.5;">${getDiagnosticText(f.key, f.score)}</p>
+            </div>
+          `).join('')}
+        </div>
+        <div style="flex: 1; padding: 18px; background: #ffffff; border-radius: 8px; border-left: 4px solid #142f48;">
+          <h3 style="font-family: 'Gilda Display', serif; font-size: 14px; color: #142f48; margin: 0 0 10px; font-weight: 400;">St\u00e4rken</h3>
+          ${staerken.map(f => `
+            <div style="margin-bottom: 8px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <strong style="font-size: 13px; color: #142f48;">${f.label}</strong>
+                <span style="font-size: 11px; color: ${f.stufeColor}; font-weight: 600;">${f.stufe} (${f.avg})</span>
+              </div>
+              <p style="font-size: 12px; color: #555; margin: 4px 0 0; line-height: 1.5;">${getDiagnosticText(f.key, f.score)}</p>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div style="margin-top: 16px; padding: 16px 20px; background: #142f48; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <p style="color: #cfdae6; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px;">Bewertungsskala</p>
+          <p style="color: #fff; font-size: 12px; margin: 0;">5 Fragen pro Dimension | 4-Punkte-Skala (1 = niedrig, 4 = hoch) | Max. 20 Punkte pro Dimension</p>
+        </div>
+        <div style="display: flex; gap: 12px; font-size: 11px; color: #cfdae6; white-space: nowrap;">
+          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #c74f62; margin-right: 4px;"></span>&lt;2.0 Kritisch</span>
+          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #feda37; margin-right: 4px;"></span>&lt;3.0 Entwicklung</span>
+          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #fff; margin-right: 4px;"></span>&ge;3.0 Stark</span>
+        </div>
       </div>
     </div>
 
