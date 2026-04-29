@@ -818,12 +818,8 @@ function submitToWebhook() {
     dim.questions.forEach((question, qIdx) => {
       const key = `${dimIdx}-${qIdx}`;
       const value = answers[key];
-      const label = ANSWER_LABELS.find(a => a.value === value);
-      payload.antworten[`${dim.title} – F${qIdx + 1}`] = {
-        frage: question,
-        wert: value,
-        label: label ? label.short : ''
-      };
+      const dimShort = dim.title.split(' ')[0];
+      payload.antworten[`${dimShort}_F${qIdx + 1}`] = value;
     });
 
     if (freitexte[dimIdx]) {
