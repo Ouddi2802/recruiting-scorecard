@@ -22,80 +22,119 @@ body { background: #e8e4dc; font-family: 'Open Sans', sans-serif; display: flex;
   box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
 
+/* Shared slide internals */
 .slide-header {
-  display: flex; justify-content: space-between; align-items: center;
+  display: flex; justify-content: space-between; align-items: flex-start;
   padding: 32px 40px 0;
 }
 .slide-header-left { flex: 1; }
-.slide-header-logo { height: 48px; width: auto; }
 .slide-header-left .label {
-  color: #cfdae6; font-size: 13px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 4px;
+  color: #cfdae6; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;
 }
 .slide-header-left h1 {
-  font-family: 'Gilda Display', serif; color: #ffffff; font-size: 28px; font-weight: 400;
+  font-family: 'Gilda Display', serif; color: #ffffff; font-size: 26px; font-weight: 400;
+}
+.slide-header-left .subtitle {
+  color: #cfdae6; font-size: 12px; margin-top: 4px; opacity: 0.7;
+}
+.slide-header-left .subtitle-italic {
+  color: #cfdae6; font-size: 11px; margin-top: 4px; opacity: 0.6; font-style: italic;
 }
 .slide-header-right { text-align: right; }
-.slide-header-right p { color: #cfdae6; font-size: 13px; line-height: 1.6; }
-
-.status-row {
-  display: flex; align-items: center; gap: 12px; padding: 16px 40px;
-}
-.status-badge {
-  color: #fff; font-size: 12px; font-weight: 700; padding: 4px 14px;
-  border-radius: 20px; letter-spacing: 0.5px; text-transform: uppercase;
-}
-.status-row .score-text { color: #cfdae6; font-size: 14px; }
+.slide-header-right p { color: #cfdae6; font-size: 12px; line-height: 1.6; }
 
 .slide-body { background: #f6f2e7; padding: 32px 40px; }
 
+.slide-footer {
+  background: #142f48; padding: 12px 40px;
+  display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(207,218,230,0.15);
+}
+.slide-footer p { color: #cfdae6; font-size: 11px; opacity: 0.6; }
+
+/* WS1 Kickoff specific */
+.ws1-total { text-align: center; padding: 20px 40px 4px; }
+.ws1-total .big { font-size: 36px; font-weight: 600; color: #feda37; }
+.ws1-total .of { font-size: 14px; color: #cfdae6; opacity: 0.7; }
+
+.ws1-bars { padding: 8px 40px 16px; }
+.ws1-dim { display: flex; align-items: center; gap: 10px; margin-bottom: 7px; }
+.ws1-dim-label { min-width: 170px; text-align: right; font-size: 12px; color: #cfdae6; }
+.ws1-dim-track { flex: 1; height: 14px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden; }
+.ws1-dim-fill { height: 100%; border-radius: 3px; }
+.ws1-dim-score { min-width: 32px; text-align: center; font-size: 12px; font-weight: 600; }
+
+.ws1-focus { display: flex; gap: 12px; padding: 4px 40px 16px; }
+.ws1-focus-box { flex: 1; border-radius: 6px; padding: 12px 14px; }
+.ws1-focus-title { font-weight: 600; font-size: 12px; margin-bottom: 6px; }
+.ws1-tag { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 11px; margin: 2px 4px 2px 0; font-weight: 500; color: #f6f2e7; }
+
+.ws1-scale { padding: 0 40px 16px; text-align: center; font-size: 10px; color: #cfdae6; opacity: 0.6; }
+
+/* WS2 Recap specific */
+.ws2-body { padding: 16px 40px 20px; }
+.ws2-qbox { border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px; text-align: center; color: #f6f2e7; font-style: italic; opacity: 0.85; line-height: 1.5; }
+.ws2-content { display: flex; gap: 20px; align-items: flex-start; }
+.ws2-bars-col { flex: 1; }
+.ws2-bars-title { font-size: 13px; font-weight: 600; color: #f6f2e7; margin: 0 0 10px; opacity: 0.8; }
+.ws2-dim { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.ws2-dim-label { min-width: 170px; font-size: 12px; color: #f6f2e7; font-weight: 500; }
+.ws2-dim-track { flex: 1; height: 18px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.ws2-dim-fill { height: 100%; border-radius: 3px; }
+.ws2-dim-score { min-width: 40px; text-align: right; font-size: 12px; color: #cfdae6; }
+.ws2-info { margin-top: 14px; padding: 10px 12px; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; font-size: 10px; color: #cfdae6; opacity: 0.75; line-height: 1.7; }
+.ws2-stickies { display: flex; flex-direction: column; gap: 8px; min-width: 140px; }
+.ws2-sticky { padding: 10px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: center; }
+
+/* WS3 Analyse specific */
+.ws3-chart { display: flex; justify-content: center; padding: 12px 40px 20px; }
+
+/* WS4 Final specific */
+.ws4-body { padding: 16px 40px 20px; }
+.ws4-content { display: flex; gap: 24px; align-items: flex-start; }
+.ws4-bars-col { flex: 1; }
+.ws4-dim { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.ws4-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.ws4-dim-name { min-width: 170px; font-size: 13px; color: #f6f2e7; }
+.ws4-dim-track { flex: 1; height: 16px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.ws4-dim-fill { height: 100%; border-radius: 3px; }
+.ws4-dim-score { min-width: 32px; text-align: right; font-size: 13px; font-weight: 600; color: #f6f2e7; }
+.ws4-badge { font-size: 11px; font-weight: 500; min-width: 110px; }
+.ws4-legend { display: flex; gap: 18px; font-size: 10px; color: #cfdae6; opacity: 0.65; margin-top: 14px; align-items: center; }
+.ws4-legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.ws4-scorebox { background: rgba(255,255,255,0.08); border-radius: 8px; padding: 18px 20px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 110px; }
+.ws4-scorebox .big { font-size: 36px; font-weight: 600; color: #feda37; line-height: 1; }
+.ws4-scorebox .lbl { font-size: 11px; color: #cfdae6; opacity: 0.6; margin-top: 6px; }
+.ws4-deutung { padding: 16px 0 0; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.12); font-size: 12px; color: #f6f2e7; line-height: 1.7; }
+.ws4-deutung-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+
+/* Default view (original) */
 .content-grid { display: flex; gap: 32px; align-items: flex-start; }
 .chart-col { flex: 1; display: flex; justify-content: center; align-items: center; }
 .bars-col { flex: 0 0 300px; }
-
-.bars-col h3 {
-  font-family: 'Gilda Display', serif; font-size: 16px; color: #142f48;
-  margin-bottom: 16px; font-weight: 400;
-}
-
+.bars-col h3 { font-family: 'Gilda Display', serif; font-size: 16px; color: #142f48; margin-bottom: 16px; font-weight: 400; }
 .dim-bar { margin-bottom: 14px; }
 .dim-bar-header { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
 .dim-bar-header .dim-name { color: #142f48; font-weight: 600; }
 .dim-bar-header .dim-score { color: #888; }
 .dim-bar-track { background: #cfdae6; border-radius: 4px; height: 8px; overflow: hidden; }
 .dim-bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
-
-.legend {
-  margin-top: 20px; padding-top: 14px; border-top: 1px solid #cfdae6;
-  display: flex; gap: 14px; font-size: 11px; color: #555;
-}
+.legend { margin-top: 20px; padding-top: 14px; border-top: 1px solid #cfdae6; display: flex; gap: 14px; font-size: 11px; color: #555; }
 .legend-item { display: flex; align-items: center; gap: 4px; }
 .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
-
-.focus-box {
-  margin-top: 24px; padding: 20px; background: #ffffff; border-radius: 8px;
-  border-left: 4px solid #c74f62;
-}
-.focus-box h3 {
-  font-family: 'Gilda Display', serif; font-size: 15px; color: #142f48;
-  margin-bottom: 8px; font-weight: 400;
-}
-.focus-box p { font-size: 13px; color: #142f48; line-height: 1.6; }
-
-.slide-footer {
-  background: #142f48; padding: 12px 40px;
-  display: flex; justify-content: space-between; align-items: center;
-}
-.slide-footer p { color: #cfdae6; font-size: 11px; }
-
 .radar-label { font-family: 'Open Sans', sans-serif; font-size: 11px; fill: #142f48; font-weight: 600; }
 .radar-score { font-family: 'Open Sans', sans-serif; font-size: 10px; fill: #888; }
 
-.no-data {
-  text-align: center; padding: 80px 40px; color: #142f48;
-}
+.no-data { text-align: center; padding: 80px 40px; color: #142f48; }
 .no-data h2 { font-family: 'Gilda Display', serif; font-size: 24px; margin-bottom: 12px; font-weight: 400; }
 .no-data p { font-size: 14px; color: #555; line-height: 1.8; }
 .no-data code { background: #cfdae6; padding: 2px 8px; border-radius: 4px; font-size: 12px; }
+
+@media print {
+  body { background: white; padding: 0; }
+  .toolbar { display: none !important; }
+  .slide { box-shadow: none; }
+}
 </style>
 </head>
 <body>
@@ -124,7 +163,8 @@ const data = {
   t: parseInt(params.get('t')) || 0,
   k: parseInt(params.get('k')) || 0,
   total: parseInt(params.get('total')) || 0,
-  status: params.get('status') || ''
+  status: params.get('status') || '',
+  view: params.get('view') || ''
 };
 
 const DIMENSIONS = [
@@ -136,63 +176,114 @@ const DIMENSIONS = [
   { key: 'k', label: 'Kulturelle Verankerung', lines: ['Kulturelle', 'Verankerung'] }
 ];
 
-function getBarColor(score) {
-  const avg = score / 5;
+/* ── Helpers ── */
+function getScores() {
+  return [data.p, data.d, data.c, data.ds, data.t, data.k];
+}
+
+function getAvg(score) { return score / 5; }
+
+function getGesamtreifegrad() {
+  const scores = getScores();
+  const sum = scores.reduce((a, b) => a + b, 0);
+  return (sum / 30).toFixed(1);
+}
+
+function getCategoryColor(avg) {
   if (avg < 2) return '#c74f62';
   if (avg < 3) return '#feda37';
-  if (avg < 3.6) return '#142f48';
-  return '#142f48';
+  return '#4aba70';
 }
 
-function getStatusColor(status) {
-  const s = status.toUpperCase();
-  if (s.includes('KRITISCH')) return '#c74f62';
-  if (s.includes('ENTWICKLUNG')) return '#c74f62';
-  if (s.includes('OPTIMIERUNG')) return '#feda37';
-  if (s.includes('STARK')) return '#2a7d4f';
-  return '#c74f62';
+function getBarColorNavy(avg) {
+  if (avg < 2) return '#c74f62';
+  if (avg < 3) return '#feda37';
+  return 'navy-strong';
 }
 
-function getStatusLabel(status) {
-  const s = status.toUpperCase();
-  if (s.includes('KRITISCH')) return 'Kritisch';
-  if (s.includes('ENTWICKLUNG')) return 'Entwicklungsbedarf';
-  if (s.includes('OPTIMIERUNG')) return 'Optimierungspotenzial';
-  if (s.includes('STARK')) return 'Stark';
-  return status;
+function getCategoryLabel(avg) {
+  if (avg < 2) return 'Entwicklungsfeld';
+  if (avg < 3) return 'Ausbauf\u00e4hig';
+  return 'St\u00e4rke';
+}
+
+function formatMonthYear() {
+  const months = ['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+  const d = new Date();
+  return `${months[d.getMonth()]} ${d.getFullYear()}`;
+}
+
+function getDimResults() {
+  const scores = getScores();
+  return DIMENSIONS.map((dim, i) => {
+    const score = scores[i];
+    const avg = getAvg(score);
+    const color = getCategoryColor(avg);
+    const category = getCategoryLabel(avg);
+    return { ...dim, score, avg, color, category };
+  });
+}
+
+function joinDimNames(dims) {
+  if (dims.length === 1) return dims[0].label;
+  if (dims.length === 2) return dims[0].label + ' sowie ' + dims[1].label;
+  return dims.slice(0, -1).map(d => d.label).join(', ') + ' sowie ' + dims[dims.length - 1].label;
+}
+
+function buildDeutungsText(dimResults) {
+  const sorted = [...dimResults].sort((a, b) => b.avg - a.avg);
+  const staerken = sorted.filter(d => d.category === 'St\u00e4rke');
+  const ausbau = sorted.filter(d => d.category === 'Ausbauf\u00e4hig');
+  const entwicklung = sorted.filter(d => d.category === 'Entwicklungsfeld');
+
+  const parts = [];
+  if (staerken.length) parts.push('St\u00e4rken liegen in ' + joinDimNames(staerken) + '.');
+  if (ausbau.length) parts.push('Ausbauf\u00e4hige Bereiche sind ' + joinDimNames(ausbau) + '.');
+  if (entwicklung.length) parts.push('Entwicklungsfelder sind ' + joinDimNames(entwicklung) + '.');
+
+  if (entwicklung.length > 0 && ausbau.length > 0) {
+    const bridge = ausbau[ausbau.length - 1];
+    parts.push('F\u00fcr die weitere Entwicklung empfiehlt sich, zuerst die Entwicklungsfelder anzugehen und ' + bridge.label + ' als verbindendes Handlungsfeld mitzudenken.');
+  } else if (entwicklung.length > 0) {
+    parts.push('F\u00fcr die weitere Entwicklung empfiehlt sich, zuerst die Entwicklungsfelder systematisch anzugehen.');
+  } else if (ausbau.length > 0) {
+    parts.push('F\u00fcr die weitere Entwicklung empfiehlt sich, die ausbauf\u00e4higen Bereiche gezielt weiterzuentwickeln.');
+  }
+
+  return parts.join('<br>');
 }
 
 function getDiagnosticText(key, score) {
   const avg = score / 5;
   const texts = {
     p: {
-      low: 'Recruiting-Prozesse sind nicht dokumentiert oder werden nicht einheitlich gelebt. Im Workshop klären wir: Wo entstehen Brüche?',
-      mid: 'Grundstrukturen vorhanden, aber Übergaben und Entscheidungswege sind noch nicht durchgängig definiert.',
+      low: 'Recruiting-Prozesse sind nicht dokumentiert oder werden nicht einheitlich gelebt. Im Workshop kl\u00e4ren wir: Wo entstehen Br\u00fcche?',
+      mid: 'Grundstrukturen vorhanden, aber \u00dcbergaben und Entscheidungswege sind noch nicht durchg\u00e4ngig definiert.',
       high: 'Prozesse sind klar strukturiert und werden aktiv genutzt. Potenzial liegt in der kontinuierlichen Optimierung.'
     },
     d: {
-      low: 'Toollandschaft ist fragmentiert, manuelle Schritte dominieren. Leitfrage: Wo verlieren wir täglich Zeit durch fehlende Automatisierung?',
-      mid: 'Einzelne Tools im Einsatz, aber nicht durchgängig vernetzt. Daten werden teilweise manuell übertragen.',
-      high: 'Tools sind integriert und Automatisierung ist etabliert. Nächster Hebel: KI-gestützte Optimierung.'
+      low: 'Toollandschaft ist fragmentiert, manuelle Schritte dominieren. Leitfrage: Wo verlieren wir t\u00e4glich Zeit durch fehlende Automatisierung?',
+      mid: 'Einzelne Tools im Einsatz, aber nicht durchg\u00e4ngig vernetzt. Daten werden teilweise manuell \u00fcbertragen.',
+      high: 'Tools sind integriert und Automatisierung ist etabliert. N\u00e4chster Hebel: KI-gest\u00fctzte Optimierung.'
     },
     c: {
       low: 'Bewerbererlebnis ist nicht gesteuert. Leitfrage: An welchen Stellen verlieren wir Kandidaten, ohne es zu merken?',
-      mid: 'Grundlegende Candidate Journey existiert, aber Feedback-Schleifen und Transparenz sind ausbaufähig.',
+      mid: 'Grundlegende Candidate Journey existiert, aber Feedback-Schleifen und Transparenz sind ausbauf\u00e4hig.',
       high: 'Positive Candidate Experience wird aktiv gestaltet und gemessen.'
     },
     ds: {
-      low: 'Recruiting-Entscheidungen basieren auf Bauchgefühl. Leitfrage: Welche drei Kennzahlen würden uns am meisten helfen?',
+      low: 'Recruiting-Entscheidungen basieren auf Bauchgef\u00fchl. Leitfrage: Welche drei Kennzahlen w\u00fcrden uns am meisten helfen?',
       mid: 'Einzelne KPIs werden erhoben, aber nicht systematisch zur Steuerung genutzt.',
       high: 'Datenbasierte Steuerung ist etabliert. Potenzial liegt im Benchmarking und der strategischen Nutzung.'
     },
     t: {
-      low: 'Recruiting wird nebenbei erledigt, Kompetenzen sind nicht gezielt aufgebaut. Leitfrage: Wer trägt die Verantwortung?',
-      mid: 'Dedizierte Rollen vorhanden, aber strategische Kapazitäten und Weiterentwicklung fehlen.',
+      low: 'Recruiting wird nebenbei erledigt, Kompetenzen sind nicht gezielt aufgebaut. Leitfrage: Wer tr\u00e4gt die Verantwortung?',
+      mid: 'Dedizierte Rollen vorhanden, aber strategische Kapazit\u00e4ten und Weiterentwicklung fehlen.',
       high: 'Team ist kompetent aufgestellt und arbeitet strategisch.'
     },
     k: {
-      low: 'Recruiting wird als reine HR-Aufgabe gesehen. Leitfrage: Wie involviert ist die Geschäftsführung wirklich?',
-      mid: 'Bewusstsein wächst, aber Recruiting ist noch nicht als strategisches Thema verankert.',
+      low: 'Recruiting wird als reine HR-Aufgabe gesehen. Leitfrage: Wie involviert ist die Gesch\u00e4ftsf\u00fchrung wirklich?',
+      mid: 'Bewusstsein w\u00e4chst, aber Recruiting ist noch nicht als strategisches Thema verankert.',
       high: 'Recruiting ist als gemeinsame Verantwortung anerkannt und strategisch verankert.'
     }
   };
@@ -202,77 +293,54 @@ function getDiagnosticText(key, score) {
   return t.high;
 }
 
-function buildRadarPoints(scores, maxRadius) {
-  const n = scores.length;
-  return scores.map((score, i) => {
-    const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-    const r = (score / 20) * maxRadius;
-    return { x: Math.cos(angle) * r, y: Math.sin(angle) * r };
-  });
-}
+/* ── Radar Chart SVG Builder ── */
+function buildRadarSVG(scores, opts) {
+  const maxR = opts.maxR || 130;
+  const w = opts.width || 420;
+  const h = opts.height || 400;
+  const cx = w / 2;
+  const cy = h / 2;
+  const n = 6;
+  const isDark = opts.dark !== false;
 
-function buildGridPoints(level, maxRadius, n) {
-  const points = [];
+  const lineColor = isDark ? 'rgba(255,255,255,0.08)' : 'rgba(207,218,230,0.6)';
+  const labelColor = isDark ? '#cfdae6' : '#142f48';
+  const scoreColor = isDark ? '#feda37' : '#888';
+  const fillColor = isDark ? 'rgba(254,218,55,0.2)' : 'rgba(20,47,72,0.15)';
+  const strokeColor = isDark ? '#feda37' : '#142f48';
+
+  function polarXY(angle, r) {
+    return { x: Math.cos(angle) * r, y: Math.sin(angle) * r };
+  }
+
+  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:${w}px;" xmlns="http://www.w3.org/2000/svg">`;
+  svg += `<g transform="translate(${cx},${cy})">`;
+
+  for (let lvl = 1; lvl <= 4; lvl++) {
+    const pts = [];
+    for (let i = 0; i < n; i++) {
+      const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+      const r = (lvl / 4) * maxR;
+      pts.push(polarXY(angle, r));
+    }
+    svg += `<polygon points="${pts.map(p => p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')}" fill="none" stroke="${lineColor}" stroke-width="0.5"/>`;
+  }
+
   for (let i = 0; i < n; i++) {
     const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
-    const r = (level / 4) * maxRadius;
-    points.push({ x: Math.cos(angle) * r, y: Math.sin(angle) * r });
-  }
-  return points;
-}
-
-function pointsToString(pts) {
-  return pts.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ');
-}
-
-function formatDate() {
-  const d = new Date();
-  const months = ['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
-  return `${d.getDate()}. ${months[d.getMonth()]} ${d.getFullYear()}`;
-}
-
-function render() {
-  const slide = document.getElementById('slide');
-
-  if (!data.name && !data.firma) {
-    slide.innerHTML = `
-      <div class="slide-body">
-        <div class="no-data">
-          <h2>Diagnose-Check Ergebnis</h2>
-          <p>Keine Daten gefunden. Die Seite erwartet URL-Parameter.</p>
-          <p style="margin-top: 16px;">Beispiel:</p>
-          <p><code>?name=M%C3%BCller&firma=ACME&p=8&d=7&c=13&ds=13&t=15&k=15&total=71&status=ENTWICKLUNGSBEDARF</code></p>
-          <p style="margin-top: 16px;">Parameter: name, firma, rolle, email, team, p, d, c, ds, t, k, total, status</p>
-        </div>
-      </div>`;
-    return;
+    const ep = polarXY(angle, maxR);
+    svg += `<line x1="0" y1="0" x2="${ep.x.toFixed(1)}" y2="${ep.y.toFixed(1)}" stroke="${lineColor}" stroke-width="0.5"/>`;
   }
 
-  const scores = [data.p, data.d, data.c, data.ds, data.t, data.k];
-  const maxR = 130;
-  const cx = 210, cy = 195;
+  const dataPts = scores.map((score, i) => {
+    const angle = (Math.PI * 2 * i) / n - Math.PI / 2;
+    const r = (score / 20) * maxR;
+    return polarXY(angle, r);
+  });
+  svg += `<polygon points="${dataPts.map(p => p.x.toFixed(1)+','+p.y.toFixed(1)).join(' ')}" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5"/>`;
 
-  const radarPts = buildRadarPoints(scores, maxR);
-  const radarStr = pointsToString(radarPts);
-
-  let gridSVG = '';
-  for (let lvl = 1; lvl <= 4; lvl++) {
-    const gPts = buildGridPoints(lvl, maxR, 6);
-    gridSVG += `<polygon points="${pointsToString(gPts)}" fill="none" stroke="#cfdae6" stroke-width="0.5" opacity="0.6"/>`;
-  }
-
-  let axesSVG = '';
-  for (let i = 0; i < 6; i++) {
-    const angle = (Math.PI * 2 * i) / 6 - Math.PI / 2;
-    const ex = Math.cos(angle) * maxR;
-    const ey = Math.sin(angle) * maxR;
-    axesSVG += `<line x1="0" y1="0" x2="${ex.toFixed(1)}" y2="${ey.toFixed(1)}" stroke="#cfdae6" stroke-width="0.5"/>`;
-  }
-
-  let dotsSVG = '';
-  radarPts.forEach((pt, i) => {
-    const col = getBarColor(scores[i]);
-    dotsSVG += `<circle cx="${pt.x.toFixed(1)}" cy="${pt.y.toFixed(1)}" r="4" fill="${col}"/>`;
+  dataPts.forEach(p => {
+    svg += `<circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="${strokeColor}"/>`;
   });
 
   const labelPositions = [
@@ -284,50 +352,272 @@ function render() {
     { dx: -maxR - 18, dy: -maxR/2 + 2, anchor: 'end' }
   ];
 
-  let labelsSVG = '';
   DIMENSIONS.forEach((dim, i) => {
     const pos = labelPositions[i];
-    const line1 = dim.lines[0];
-    const line2 = dim.lines[1];
-    labelsSVG += `<text class="radar-label" x="${pos.dx}" y="${pos.dy - 12}" text-anchor="${pos.anchor}">${line1}</text>`;
-    labelsSVG += `<text class="radar-label" x="${pos.dx}" y="${pos.dy}" text-anchor="${pos.anchor}">${line2}</text>`;
-    labelsSVG += `<text class="radar-score" x="${pos.dx}" y="${pos.dy + 12}" text-anchor="${pos.anchor}">${scores[i]} / 20</text>`;
+    svg += `<text font-family="Open Sans,sans-serif" font-size="11" fill="${labelColor}" font-weight="600" x="${pos.dx}" y="${pos.dy - 12}" text-anchor="${pos.anchor}">${dim.lines[0]}</text>`;
+    svg += `<text font-family="Open Sans,sans-serif" font-size="11" fill="${labelColor}" font-weight="600" x="${pos.dx}" y="${pos.dy}" text-anchor="${pos.anchor}">${dim.lines[1]}</text>`;
+    svg += `<text font-family="Open Sans,sans-serif" font-size="10" fill="${scoreColor}" font-weight="600" x="${pos.dx}" y="${pos.dy + 13}" text-anchor="${pos.anchor}">${getAvg(scores[i]).toFixed(1)}</text>`;
   });
 
-  const dimResults = DIMENSIONS.map((dim, i) => {
-    const score = scores[i];
-    const avg = score / 5;
-    let stufe, stufeColor;
-    if (avg < 2) { stufe = 'Kritisch'; stufeColor = '#c74f62'; }
-    else if (avg < 3) { stufe = 'Entwicklungsbedarf'; stufeColor = '#d4940a'; }
-    else if (avg < 3.6) { stufe = 'Optimierungspotenzial'; stufeColor = '#2a7d5f'; }
-    else { stufe = 'Stark'; stufeColor = '#142f48'; }
-    return { ...dim, score, avg: avg.toFixed(1), stufe, stufeColor };
+  svg += '</g></svg>';
+  return svg;
+}
+
+/* ── WS1: Kick-off ── */
+function renderKickoff() {
+  const slide = document.getElementById('slide');
+  const scores = getScores();
+  const dimResults = getDimResults();
+  const reifegrad = getGesamtreifegrad();
+  const sorted = [...dimResults].sort((a, b) => a.avg - b.avg);
+  const handlungsfelder = sorted.filter(d => d.avg < 2.5).slice(0, 2);
+  const staerken = sorted.filter(d => d.avg >= 2.5).slice(-2).reverse();
+  if (handlungsfelder.length === 0) { handlungsfelder.push(sorted[0], sorted[1]); }
+  if (staerken.length === 0) { staerken.push(sorted[sorted.length-1], sorted[sorted.length-2]); }
+
+  let barsHTML = '';
+  dimResults.forEach(d => {
+    const pct = (d.score / 20) * 100;
+    const isNavy = d.avg >= 3;
+    const fillStyle = isNavy
+      ? `background:#142f48;border:1px solid #cfdae6;`
+      : `background:${d.color};`;
+    const scoreColor = isNavy ? '#cfdae6' : d.color;
+    barsHTML += `
+      <div class="ws1-dim">
+        <span class="ws1-dim-label">${d.label}</span>
+        <div class="ws1-dim-track"><div class="ws1-dim-fill" style="width:${pct}%;${fillStyle}"></div></div>
+        <span class="ws1-dim-score" style="color:${scoreColor}">${d.avg.toFixed(1)}</span>
+      </div>`;
   });
-  const sorted = [...dimResults].sort((a, b) => a.score - b.score);
+
+  slide.innerHTML = `
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <h1>Recruiting-Scorecard</h1>
+        <p class="subtitle">${data.firma} | ${formatMonthYear()}</p>
+      </div>
+      <div class="slide-header-right">
+        <p>WS1 Kick-off</p>
+      </div>
+    </div>
+
+    <div class="ws1-total">
+      <span class="big">${reifegrad.replace('.', ',')}</span>
+      <span class="of"> / 4,0 Gesamtreifegrad</span>
+    </div>
+
+    <div class="ws1-bars">${barsHTML}</div>
+
+    <div class="ws1-focus">
+      <div class="ws1-focus-box" style="background:rgba(199,79,98,0.15);border-left:3px solid #c74f62;">
+        <div class="ws1-focus-title" style="color:#c74f62;">Handlungsfelder</div>
+        ${handlungsfelder.map(d => `<span class="ws1-tag" style="background:rgba(199,79,98,0.25);">${d.label}</span>`).join('')}
+      </div>
+      <div class="ws1-focus-box" style="background:rgba(207,218,230,0.12);border-left:3px solid #cfdae6;">
+        <div class="ws1-focus-title" style="color:#cfdae6;">St\u00e4rken</div>
+        ${staerken.map(d => `<span class="ws1-tag" style="background:rgba(207,218,230,0.2);">${d.label}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="ws1-scale">Skala 1\u20134 | Basis: 30 Fragen, 6 Dimensionen, Selbsteinsch\u00e4tzung</div>
+
+    <div class="slide-footer">
+      <p>HiringLab | Recruiting-Architektur</p>
+      <p>Kick-off (WS1)</p>
+    </div>`;
+}
+
+/* ── WS2: Prozessworkshop Recap ── */
+function renderRecap() {
+  const slide = document.getElementById('slide');
+  const scores = getScores();
+  const dimResults = getDimResults();
+
+  let barsHTML = '';
+  dimResults.forEach(d => {
+    const pct = (d.score / 20) * 100;
+    const isNavy = d.avg >= 3;
+    const fillStyle = isNavy
+      ? `background:#142f48;border:1px solid #cfdae6;`
+      : `background:${d.color};`;
+    barsHTML += `
+      <div class="ws2-dim">
+        <span class="ws2-dim-label">${d.label}</span>
+        <div class="ws2-dim-track"><div class="ws2-dim-fill" style="width:${pct}%;${fillStyle}"></div></div>
+        <span class="ws2-dim-score">${d.score}/20</span>
+      </div>`;
+  });
+
+  slide.innerHTML = `
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <p class="label">Scorecard-Recap</p>
+        <h1>Was f\u00e4llt auf?</h1>
+      </div>
+      <div class="slide-header-right">
+        <p>${data.firma}</p>
+        <p>WS2 Prozessworkshop</p>
+      </div>
+    </div>
+
+    <div class="ws2-body">
+      <div class="ws2-qbox">Was \u00fcberrascht Sie an diesem Bild? Was best\u00e4tigt sich? Was w\u00fcrden Sie anders einordnen?</div>
+      <div class="ws2-content">
+        <div class="ws2-bars-col">
+          <p class="ws2-bars-title">Ergebnis nach Dimension</p>
+          ${barsHTML}
+          <div class="ws2-info">
+            Bewertung: 5 Fragen x max. 4 Punkte = 20 pro Dimension<br>
+            Farben: <span style="color:#c74f62">rot = kritisch</span> | <span style="color:#feda37">gelb = Entwicklung</span> | <span style="color:#cfdae6">navy = stark</span>
+          </div>
+        </div>
+        <div class="ws2-stickies">
+          <div class="ws2-sticky" style="background:#feda37;color:#142f48;">Was best\u00e4tigt sich?</div>
+          <div class="ws2-sticky" style="background:#cfdae6;color:#142f48;">Was \u00fcberrascht?</div>
+          <div class="ws2-sticky" style="background:#cfdae6;color:#142f48;">Was pr\u00fcfen wir<br>im Prozess?</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <p>HiringLab | Recruiting-Architektur</p>
+      <p>Prozessworkshop (WS2)</p>
+    </div>`;
+}
+
+/* ── WS3: Analyse ── */
+function renderAnalyse() {
+  const slide = document.getElementById('slide');
+  const scores = getScores();
+
+  slide.innerHTML = `
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <h1>Ausgangsbild aus der Scorecard</h1>
+        <p class="subtitle">${data.firma} | ${formatMonthYear()}</p>
+      </div>
+      <div class="slide-header-right">
+        <p>WS3 Analyse</p>
+      </div>
+    </div>
+
+    <div class="ws3-chart">
+      ${buildRadarSVG(scores, { maxR: 130, width: 420, height: 400, dark: true })}
+    </div>
+
+    <div class="slide-footer">
+      <p>HiringLab | Recruiting-Architektur</p>
+      <p>Analyse (WS3)</p>
+    </div>`;
+}
+
+/* ── WS4: Ergebnispräsentation ── */
+function renderFinal() {
+  const slide = document.getElementById('slide');
+  const dimResults = getDimResults();
+  const reifegrad = getGesamtreifegrad();
+
+  const sorted = [...dimResults].sort((a, b) => b.avg - a.avg);
+
+  let barsHTML = '';
+  sorted.forEach(d => {
+    const pct = (d.avg / 4) * 100;
+    const roundedAvg = Math.round(d.avg);
+    barsHTML += `
+      <div class="ws4-dim">
+        <span class="ws4-dot" style="background:${d.color}"></span>
+        <span class="ws4-dim-name">${d.label}</span>
+        <div class="ws4-dim-track"><div class="ws4-dim-fill" style="width:${pct}%;background:${d.color};"></div></div>
+        <span class="ws4-dim-score">${roundedAvg}/4</span>
+        <span class="ws4-badge" style="color:${d.color}">${d.category}</span>
+      </div>`;
+  });
+
+  const deutung = buildDeutungsText(dimResults);
+
+  slide.innerHTML = `
+    <div class="slide-header">
+      <div class="slide-header-left">
+        <p class="label">Validierte Bewertung</p>
+        <h1>Finaler Reifegrad | Recruiting-System</h1>
+        <p class="subtitle-italic">Auf Basis von Scorecard, Prozessanalyse und Medienbruch-Scan</p>
+      </div>
+      <div class="slide-header-right">
+        <p>${data.firma}</p>
+        <p>Ergebnispr\u00e4sentation</p>
+      </div>
+    </div>
+
+    <div class="ws4-body">
+      <div class="ws4-content">
+        <div class="ws4-bars-col">
+          ${barsHTML}
+          <div class="ws4-legend">
+            <span><span class="ws4-legend-dot" style="background:#4aba70"></span>St\u00e4rke (3\u20134)</span>
+            <span><span class="ws4-legend-dot" style="background:#feda37"></span>Ausbauf\u00e4hig (2)</span>
+            <span><span class="ws4-legend-dot" style="background:#c74f62"></span>Entwicklungsfeld (1)</span>
+            <span style="margin-left:8px;">Skala 1\u20134 | 30 Fragen, 6 Dimensionen</span>
+          </div>
+        </div>
+        <div class="ws4-scorebox">
+          <span class="big">${reifegrad.replace('.', ',')}</span>
+          <span class="lbl">/ 4,0<br>Gesamtreifegrad</span>
+        </div>
+      </div>
+      <div class="ws4-deutung">
+        <div class="ws4-deutung-title">Was das bedeutet:</div>
+        ${deutung}
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <p>HiringLab | Recruiting-Architektur</p>
+      <p>Ergebnispr\u00e4sentation (WS4)</p>
+    </div>`;
+}
+
+/* ── Default view (original detailed) ── */
+function renderDefault() {
+  const slide = document.getElementById('slide');
+
+  if (!data.name && !data.firma) {
+    slide.innerHTML = `
+      <div class="slide-body">
+        <div class="no-data">
+          <h2>Diagnose-Check Ergebnis</h2>
+          <p>Keine Daten gefunden. Die Seite erwartet URL-Parameter.</p>
+          <p style="margin-top: 16px;">Beispiel:</p>
+          <p><code>?name=M%C3%BCller&firma=ACME&p=8&d=7&c=13&ds=13&t=15&k=15&total=71&status=ENTWICKLUNGSBEDARF</code></p>
+          <p style="margin-top: 16px;">Verf\u00fcgbare Views: <code>&view=kickoff</code> <code>&view=recap</code> <code>&view=analyse</code> <code>&view=final</code></p>
+        </div>
+      </div>`;
+    return;
+  }
+
+  const scores = getScores();
+  const dimResults = getDimResults();
+  const reifegrad = getGesamtreifegrad();
+  const sorted = [...dimResults].sort((a, b) => a.avg - b.avg);
   const fokus = sorted.slice(0, 2);
   const staerken = sorted.slice(-2).reverse();
 
   let barsHTML = '';
-  DIMENSIONS.forEach((dim, i) => {
-    const score = scores[i];
-    const pct = (score / 20) * 100;
-    const col = getBarColor(score);
+  dimResults.forEach(d => {
+    const pct = (d.score / 20) * 100;
     barsHTML += `
       <div class="dim-bar">
         <div class="dim-bar-header">
-          <span class="dim-name">${dim.label}</span>
-          <span class="dim-score">${score} / 20</span>
+          <span class="dim-name">${d.label}</span>
+          <span class="dim-score">${d.score} / 20</span>
         </div>
         <div class="dim-bar-track">
-          <div class="dim-bar-fill" style="width:${pct}%; background:${col};"></div>
+          <div class="dim-bar-fill" style="width:${pct}%; background:${d.color};"></div>
         </div>
       </div>`;
   });
 
-  const pct = data.total > 0 ? Math.round((data.total / 120) * 100) : 0;
-  const statusColor = getStatusColor(data.status);
-  const statusLabel = getStatusLabel(data.status);
+  const radarSVG = buildRadarSVG(scores, { maxR: 130, width: 420, height: 400, dark: false });
 
   slide.innerHTML = `
     <div class="slide-header">
@@ -336,96 +626,98 @@ function render() {
         <h1>Standortbestimmung Recruiting</h1>
       </div>
       <div class="slide-header-right">
-        <img src="logo-hell.svg" class="slide-header-logo" alt="HiringLab" onerror="this.style.display='none'">
         <p>${data.name}${data.firma ? ' | ' + data.firma : ''}</p>
-        <p>${formatDate()}</p>
+        <p>${formatMonthYear()}</p>
       </div>
     </div>
 
-    <div class="status-row">
-      <div class="status-badge" style="background:${statusColor};">${statusLabel}</div>
-      <span class="score-text">Gesamtscore: ${data.total} / 120 Punkte (${pct}%)</span>
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 40px;">
+      <div style="color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:20px;background:${getCategoryColor(parseFloat(reifegrad))};">${getCategoryLabel(parseFloat(reifegrad))}</div>
+      <span style="color:#cfdae6;font-size:14px;">Gesamtreifegrad: ${reifegrad.replace('.', ',')} / 4,0</span>
     </div>
 
     <div class="slide-body">
       <div class="content-grid">
-        <div class="chart-col">
-          <svg viewBox="0 0 420 400" style="width:100%; max-width:420px;">
-            <g transform="translate(${cx},${cy})">
-              ${gridSVG}
-              ${axesSVG}
-              <polygon points="${radarStr}" fill="rgba(20,47,72,0.15)" stroke="#142f48" stroke-width="2"/>
-              ${dotsSVG}
-              ${labelsSVG}
-            </g>
-          </svg>
-        </div>
+        <div class="chart-col">${radarSVG}</div>
         <div class="bars-col">
           <h3>Ergebnis nach Dimension</h3>
           ${barsHTML}
           <div class="legend">
             <div class="legend-item"><span class="legend-dot" style="background:#c74f62;"></span> &lt;2.0</div>
             <div class="legend-item"><span class="legend-dot" style="background:#feda37;"></span> &lt;3.0</div>
-            <div class="legend-item"><span class="legend-dot" style="background:#142f48;"></span> &ge;3.0</div>
-            <span style="color: #aaa; font-size: 10px; margin-left: 4px;">(Durchschnitt pro Frage)</span>
+            <div class="legend-item"><span class="legend-dot" style="background:#4aba70;"></span> &ge;3.0</div>
           </div>
         </div>
       </div>
 
-      <div style="display: flex; gap: 16px; margin-top: 24px;">
-        <div style="flex: 1; padding: 18px; background: #ffffff; border-radius: 8px; border-left: 4px solid #c74f62;">
-          <h3 style="font-family: 'Gilda Display', serif; font-size: 14px; color: #142f48; margin: 0 0 10px; font-weight: 400;">Handlungsfelder</h3>
+      <div style="display:flex;gap:16px;margin-top:24px;">
+        <div style="flex:1;padding:18px;background:#fff;border-radius:8px;border-left:4px solid #c74f62;">
+          <h3 style="font-family:'Gilda Display',serif;font-size:14px;color:#142f48;margin:0 0 10px;font-weight:400;">Handlungsfelder</h3>
           ${fokus.map(f => `
-            <div style="margin-bottom: 8px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <strong style="font-size: 13px; color: #142f48;">${f.label}</strong>
-                <span style="font-size: 11px; color: ${f.stufeColor}; font-weight: 600;">${f.stufe} (${f.avg})</span>
+            <div style="margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:13px;color:#142f48;">${f.label}</strong>
+                <span style="font-size:11px;color:${f.color};font-weight:600;">${f.category} (${f.avg.toFixed(1)})</span>
               </div>
-              <p style="font-size: 12px; color: #555; margin: 4px 0 0; line-height: 1.5;">${getDiagnosticText(f.key, f.score)}</p>
+              <p style="font-size:12px;color:#555;margin:4px 0 0;line-height:1.5;">${getDiagnosticText(f.key, f.score)}</p>
             </div>
           `).join('')}
         </div>
-        <div style="flex: 1; padding: 18px; background: #ffffff; border-radius: 8px; border-left: 4px solid #142f48;">
-          <h3 style="font-family: 'Gilda Display', serif; font-size: 14px; color: #142f48; margin: 0 0 10px; font-weight: 400;">St\u00e4rken</h3>
+        <div style="flex:1;padding:18px;background:#fff;border-radius:8px;border-left:4px solid #142f48;">
+          <h3 style="font-family:'Gilda Display',serif;font-size:14px;color:#142f48;margin:0 0 10px;font-weight:400;">St\u00e4rken</h3>
           ${staerken.map(f => `
-            <div style="margin-bottom: 8px;">
-              <div style="display: flex; justify-content: space-between; align-items: center;">
-                <strong style="font-size: 13px; color: #142f48;">${f.label}</strong>
-                <span style="font-size: 11px; color: ${f.stufeColor}; font-weight: 600;">${f.stufe} (${f.avg})</span>
+            <div style="margin-bottom:8px;">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <strong style="font-size:13px;color:#142f48;">${f.label}</strong>
+                <span style="font-size:11px;color:${f.color};font-weight:600;">${f.category} (${f.avg.toFixed(1)})</span>
               </div>
-              <p style="font-size: 12px; color: #555; margin: 4px 0 0; line-height: 1.5;">${getDiagnosticText(f.key, f.score)}</p>
+              <p style="font-size:12px;color:#555;margin:4px 0 0;line-height:1.5;">${getDiagnosticText(f.key, f.score)}</p>
             </div>
           `).join('')}
         </div>
       </div>
 
-      <div style="margin-top: 16px; padding: 16px 20px; background: #142f48; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+      <div style="margin-top:16px;padding:16px 20px;background:#142f48;border-radius:8px;display:flex;justify-content:space-between;align-items:center;">
         <div>
-          <p style="color: #cfdae6; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px;">Bewertungsskala</p>
-          <p style="color: #fff; font-size: 12px; margin: 0;">5 Fragen pro Dimension | 4-Punkte-Skala (1 = niedrig, 4 = hoch) | Max. 20 Punkte pro Dimension</p>
+          <p style="color:#cfdae6;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px;">Bewertungsskala</p>
+          <p style="color:#fff;font-size:12px;margin:0;">5 Fragen pro Dimension | 4-Punkte-Skala (1 = niedrig, 4 = hoch) | Max. 20 Punkte pro Dimension</p>
         </div>
-        <div style="display: flex; gap: 12px; font-size: 11px; color: #cfdae6; white-space: nowrap;">
-          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #c74f62; margin-right: 4px;"></span>&lt;2.0 Kritisch</span>
-          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #feda37; margin-right: 4px;"></span>&lt;3.0 Entwicklung</span>
-          <span><span style="display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: #fff; margin-right: 4px;"></span>&ge;3.0 Stark</span>
+        <div style="display:flex;gap:12px;font-size:11px;color:#cfdae6;white-space:nowrap;">
+          <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#c74f62;margin-right:4px;"></span>&lt;2.0 Kritisch</span>
+          <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#feda37;margin-right:4px;"></span>&lt;3.0 Entwicklung</span>
+          <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#4aba70;margin-right:4px;"></span>&ge;3.0 Stark</span>
         </div>
       </div>
     </div>
 
     <div class="slide-footer">
       <p>HiringLab | Recruiting-Architektur</p>
-      <p>Kick-off Workshop (WS1) | Vertraulich</p>
+      <p>Diagnose-Check Ergebnis</p>
     </div>`;
 }
 
+/* ── Router ── */
+function render() {
+  const view = data.view.toLowerCase();
+  switch (view) {
+    case 'kickoff': renderKickoff(); break;
+    case 'recap': renderRecap(); break;
+    case 'analyse': renderAnalyse(); break;
+    case 'final': renderFinal(); break;
+    default: renderDefault(); break;
+  }
+}
+
+/* ── PNG Download ── */
 function downloadImage() {
   const el = document.getElementById('slide');
   const toolbar = document.getElementById('toolbar');
   toolbar.style.display = 'none';
   html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
     toolbar.style.display = 'flex';
+    const viewLabel = data.view || 'Ergebnis';
     const link = document.createElement('a');
-    link.download = `Diagnose-Check_${data.firma || 'Ergebnis'}.png`;
+    link.download = `Diagnose-Check_${data.firma || 'Ergebnis'}_${viewLabel}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
   }).catch(() => { toolbar.style.display = 'flex'; });
@@ -433,14 +725,5 @@ function downloadImage() {
 
 render();
 </script>
-
-<style>
-@media print {
-  body { background: white; padding: 0; }
-  .toolbar { display: none !important; }
-  .slide { box-shadow: none; }
-}
-</style>
-
 </body>
 </html>
