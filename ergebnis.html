@@ -197,15 +197,22 @@ function getCategoryColor(avg) {
   return '#4aba70';
 }
 
-function getBarColorNavy(avg) {
-  if (avg < 2) return '#c74f62';
-  if (avg < 3) return '#feda37';
-  return 'navy-strong';
-}
-
 function getCategoryLabel(avg) {
   if (avg < 2) return 'Entwicklungsfeld';
   if (avg < 3) return 'Ausbauf\u00e4hig';
+  return 'St\u00e4rke';
+}
+
+/* WS4 uses rounded scores (1-4) for cleaner management logic */
+function getWS4CategoryColor(roundedScore) {
+  if (roundedScore <= 1) return '#c74f62';
+  if (roundedScore <= 3) return '#feda37';
+  return '#4aba70';
+}
+
+function getWS4CategoryLabel(roundedScore) {
+  if (roundedScore <= 1) return 'Entwicklungsfeld';
+  if (roundedScore <= 3) return 'Ausbauf\u00e4hig';
   return 'St\u00e4rke';
 }
 
@@ -315,7 +322,9 @@ function buildRadarSVG(scores, opts) {
     return { x: Math.cos(angle) * r, y: Math.sin(angle) * r };
   }
 
-  let svg = `<svg viewBox="0 0 ${w} ${h}" style="width:100%;max-width:${w}px;" xmlns="http://www.w3.org/2000/svg">`;
+  const padX = 60;
+  const padY = 40;
+  let svg = `<svg viewBox="${-padX} ${-padY} ${w + padX*2} ${h + padY*2}" style="width:100%;max-width:${w + padX*2}px;" xmlns="http://www.w3.org/2000/svg">`;
   svg += `<g transform="translate(${cx},${cy})">`;
 
   for (let lvl = 1; lvl <= 4; lvl++) {
@@ -346,12 +355,12 @@ function buildRadarSVG(scores, opts) {
   });
 
   const labelPositions = [
-    { dx: 0, dy: -maxR - 14, anchor: 'middle' },
-    { dx: maxR + 18, dy: -maxR/2 + 2, anchor: 'start' },
-    { dx: maxR + 18, dy: maxR/2 + 2, anchor: 'start' },
-    { dx: 0, dy: maxR + 22, anchor: 'middle' },
-    { dx: -maxR - 18, dy: maxR/2 + 2, anchor: 'end' },
-    { dx: -maxR - 18, dy: -maxR/2 + 2, anchor: 'end' }
+    { dx: 0, dy: -maxR - 20, anchor: 'middle' },
+    { dx: maxR + 24, dy: -maxR/2 + 2, anchor: 'start' },
+    { dx: maxR + 24, dy: maxR/2 + 2, anchor: 'start' },
+    { dx: 0, dy: maxR + 28, anchor: 'middle' },
+    { dx: -maxR - 24, dy: maxR/2 + 2, anchor: 'end' },
+    { dx: -maxR - 24, dy: -maxR/2 + 2, anchor: 'end' }
   ];
 
   DIMENSIONS.forEach((dim, i) => {
@@ -380,16 +389,11 @@ function renderKickoff() {
   let barsHTML = '';
   dimResults.forEach(d => {
     const pct = (d.score / 20) * 100;
-    const isNavy = d.avg >= 3;
-    const fillStyle = isNavy
-      ? `background:#142f48;border:1px solid #cfdae6;`
-      : `background:${d.color};`;
-    const scoreColor = isNavy ? '#cfdae6' : d.color;
     barsHTML += `
       <div class="ws1-dim">
         <span class="ws1-dim-label">${d.label}</span>
-        <div class="ws1-dim-track"><div class="ws1-dim-fill" style="width:${pct}%;${fillStyle}"></div></div>
-        <span class="ws1-dim-score" style="color:${scoreColor}">${d.avg.toFixed(1)}</span>
+        <div class="ws1-dim-track"><div class="ws1-dim-fill" style="width:${pct}%;background:${d.color};"></div></div>
+        <span class="ws1-dim-score" style="color:${d.color}">${d.avg.toFixed(1)}</span>
       </div>`;
   });
 
@@ -416,9 +420,9 @@ function renderKickoff() {
         <div class="ws1-focus-title" style="color:#c74f62;">Handlungsfelder</div>
         ${handlungsfelder.map(d => `<span class="ws1-tag" style="background:rgba(199,79,98,0.25);">${d.label}</span>`).join('')}
       </div>
-      <div class="ws1-focus-box" style="background:rgba(207,218,230,0.12);border-left:3px solid #cfdae6;">
-        <div class="ws1-focus-title" style="color:#cfdae6;">St\u00e4rken</div>
-        ${staerken.map(d => `<span class="ws1-tag" style="background:rgba(207,218,230,0.2);">${d.label}</span>`).join('')}
+      <div class="ws1-focus-box" style="background:rgba(74,186,112,0.12);border-left:3px solid #4aba70;">
+        <div class="ws1-focus-title" style="color:#4aba70;">St\u00e4rken</div>
+        ${staerken.map(d => `<span class="ws1-tag" style="background:rgba(74,186,112,0.2);">${d.label}</span>`).join('')}
       </div>
     </div>
 
@@ -439,14 +443,10 @@ function renderRecap() {
   let barsHTML = '';
   dimResults.forEach(d => {
     const pct = (d.score / 20) * 100;
-    const isNavy = d.avg >= 3;
-    const fillStyle = isNavy
-      ? `background:#142f48;border:1px solid #cfdae6;`
-      : `background:${d.color};`;
     barsHTML += `
       <div class="ws2-dim">
         <span class="ws2-dim-label">${d.label}</span>
-        <div class="ws2-dim-track"><div class="ws2-dim-fill" style="width:${pct}%;${fillStyle}"></div></div>
+        <div class="ws2-dim-track"><div class="ws2-dim-fill" style="width:${pct}%;background:${d.color};"></div></div>
         <span class="ws2-dim-score">${d.score}/20</span>
       </div>`;
   });
@@ -471,7 +471,7 @@ function renderRecap() {
           ${barsHTML}
           <div class="ws2-info">
             Bewertung: 5 Fragen x max. 4 Punkte = 20 pro Dimension<br>
-            Farben: <span style="color:#c74f62">rot = kritisch</span> | <span style="color:#feda37">gelb = Entwicklung</span> | <span style="color:#cfdae6">navy = stark</span>
+            Farben: <span style="color:#c74f62">rot = Entwicklungsfeld</span> | <span style="color:#feda37">gelb = ausbaufähig</span> | <span style="color:#4aba70">grün = Stärke</span>
           </div>
         </div>
         <div class="ws2-stickies">
@@ -524,19 +524,26 @@ function renderFinal() {
 
   let barsHTML = '';
   sorted.forEach(d => {
-    const pct = (d.avg / 4) * 100;
     const roundedAvg = Math.round(d.avg);
+    const pct = (roundedAvg / 4) * 100;
+    const ws4Color = getWS4CategoryColor(roundedAvg);
+    const ws4Label = getWS4CategoryLabel(roundedAvg);
     barsHTML += `
       <div class="ws4-dim">
-        <span class="ws4-dot" style="background:${d.color}"></span>
+        <span class="ws4-dot" style="background:${ws4Color}"></span>
         <span class="ws4-dim-name">${d.label}</span>
-        <div class="ws4-dim-track"><div class="ws4-dim-fill" style="width:${pct}%;background:${d.color};"></div></div>
+        <div class="ws4-dim-track"><div class="ws4-dim-fill" style="width:${pct}%;background:${ws4Color};"></div></div>
         <span class="ws4-dim-score">${roundedAvg}/4</span>
-        <span class="ws4-badge" style="color:${d.color}">${d.category}</span>
+        <span class="ws4-badge" style="color:${ws4Color}">${ws4Label}</span>
       </div>`;
   });
 
-  const deutung = buildDeutungsText(dimResults);
+  /* WS4 Deutungstext uses WS4 logic (rounded scores) */
+  const ws4DimResults = sorted.map(d => {
+    const roundedAvg = Math.round(d.avg);
+    return { ...d, category: getWS4CategoryLabel(roundedAvg), color: getWS4CategoryColor(roundedAvg) };
+  });
+  const deutung = buildDeutungsText(ws4DimResults);
 
   slide.innerHTML = `
     <div class="slide-header">
@@ -556,8 +563,8 @@ function renderFinal() {
         <div class="ws4-bars-col">
           ${barsHTML}
           <div class="ws4-legend">
-            <span><span class="ws4-legend-dot" style="background:#4aba70"></span>St\u00e4rke (3\u20134)</span>
-            <span><span class="ws4-legend-dot" style="background:#feda37"></span>Ausbauf\u00e4hig (2)</span>
+            <span><span class="ws4-legend-dot" style="background:#4aba70"></span>St\u00e4rke (4)</span>
+            <span><span class="ws4-legend-dot" style="background:#feda37"></span>Ausbauf\u00e4hig (2\u20133)</span>
             <span><span class="ws4-legend-dot" style="background:#c74f62"></span>Entwicklungsfeld (1)</span>
             <span style="margin-left:8px;">Skala 1\u20134 | 30 Fragen, 6 Dimensionen</span>
           </div>
@@ -665,7 +672,7 @@ function renderDefault() {
             </div>
           `).join('')}
         </div>
-        <div style="flex:1;padding:18px;background:#fff;border-radius:8px;border-left:4px solid #142f48;">
+        <div style="flex:1;padding:18px;background:#fff;border-radius:8px;border-left:4px solid #4aba70;">
           <h3 style="font-family:'Gilda Display',serif;font-size:14px;color:#142f48;margin:0 0 10px;font-weight:400;">St\u00e4rken</h3>
           ${staerken.map(f => `
             <div style="margin-bottom:8px;">
