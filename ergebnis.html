@@ -140,9 +140,11 @@ body { background: #e8e4dc; font-family: 'Open Sans', sans-serif; display: flex;
 <body>
 
 <div class="toolbar" id="toolbar">
-  <button onclick="downloadImage()">Als PNG speichern</button>
+  <button onclick="downloadImage()">Diese View als PNG</button>
+  <button onclick="downloadAllViews()">Alle 4 Workshop-PNGs</button>
   <button onclick="window.print()">Drucken / PDF</button>
 </div>
+<div id="download-status" style="display:none;margin-bottom:12px;padding:10px 20px;background:#142f48;color:#feda37;border-radius:6px;font-size:13px;font-weight:600;"></div>
 
 <div class="slide" id="slide"></div>
 
@@ -708,11 +710,13 @@ function render() {
   }
 }
 
-/* ── PNG Download ── */
+/* ── PNG Download (einzeln) ── */
 function downloadImage() {
   const el = document.getElementById('slide');
   const toolbar = document.getElementById('toolbar');
+  const status = document.getElementById('download-status');
   toolbar.style.display = 'none';
+  status.style.display = 'none';
   html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
     toolbar.style.display = 'flex';
     const viewLabel = data.view || 'Ergebnis';
@@ -721,6 +725,47 @@ function downloadImage() {
     link.href = canvas.toDataURL('image/png');
     link.click();
   }).catch(() => { toolbar.style.display = 'flex'; });
+}
+
+/* ── Alle 4 Workshop-PNGs nacheinander ── */
+async function downloadAllViews() {
+  const views = [
+    { id: 'kickoff', render: renderKickoff, label: 'WS1_Kickoff' },
+    { id: 'recap', render: renderRecap, label: 'WS2_Recap' },
+    { id: 'analyse', render: renderAnalyse, label: 'WS3_Analyse' },
+    { id: 'final', render: renderFinal, label: 'WS4_Final' }
+  ];
+
+  const el = document.getElementById('slide');
+  const toolbar = document.getElementById('toolbar');
+  const status = document.getElementById('download-status');
+  toolbar.style.display = 'none';
+  status.style.display = 'block';
+
+  for (let i = 0; i < views.length; i++) {
+    const v = views[i];
+    status.textContent = `Erstelle PNG ${i + 1} / 4: ${v.label} ...`;
+
+    v.render();
+
+    await new Promise(r => setTimeout(r, 300));
+
+    try {
+      const canvas = await html2canvas(el, { scale: 2, useCORS: true, backgroundColor: null });
+      const link = document.createElement('a');
+      link.download = `Diagnose-Check_${data.firma || 'Ergebnis'}_${v.label}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      await new Promise(r => setTimeout(r, 500));
+    } catch (e) {
+      console.error('Fehler bei ' + v.label, e);
+    }
+  }
+
+  status.textContent = 'Alle 4 PNGs erstellt!';
+  toolbar.style.display = 'flex';
+
+  setTimeout(() => { status.style.display = 'none'; render(); }, 2000);
 }
 
 render();
