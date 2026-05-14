@@ -1041,8 +1041,8 @@ function renderChecklists(app) {
       const checked = checklistAnswers[cl.key].includes(item) ? ' checked' : '';
       const id = `cl_${ci}_${ii}`;
       html += `<div class="checklist-item" onclick="toggleChecklist('${cl.key}', '${escHtml(item).replace(/'/g, "\\'")}', this)">`;
-      html += `<input type="checkbox" id="${id}"${checked} onclick="event.stopPropagation()">`;
-      html += `<label for="${id}">${escHtml(item)}</label>`;
+      html += `<input type="checkbox" id="${id}"${checked} style="pointer-events:none">`;
+      html += `<label>${escHtml(item)}</label>`;
       html += '</div>';
     });
     html += '</div>';
@@ -1352,13 +1352,25 @@ function submitResults() {
   })
   .then(r => {
     submitted = true;
-    render();
+    showThankYou();
   })
   .catch(err => {
     console.error('Submit error:', err);
     submitted = true;
-    render();
+    showThankYou();
   });
+}
+
+function showThankYou() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; text-align:center; padding:40px 24px;">
+      <div style="font-size:64px; margin-bottom:24px; color:var(--yellow);">✓</div>
+      <h1 style="font-size:28px; font-weight:700; color:var(--text); margin-bottom:16px;">Vielen Dank!</h1>
+      <p style="font-size:16px; color:var(--text-muted); max-width:480px; line-height:1.6;">Ihre Ergebnisse wurden erfolgreich übermittelt. Wir nutzen Ihre Angaben, um den Diagnose-Workshop optimal vorzubereiten.</p>
+      <p style="font-size:14px; color:var(--text-muted); margin-top:24px;">Sie können dieses Fenster jetzt schließen.</p>
+    </div>`;
+  window.scrollTo(0, 0);
 }
 
 // ====================================================
