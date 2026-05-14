@@ -1332,7 +1332,7 @@ function submitResults() {
   // Compact Einzelantworten (scores only, fits under 2000 chars)
   let einzelantwortenCompact = '';
   dimensions.forEach((dim, di) => {
-    const scores = dim.questions.map((q, qi) => `F${qi+1}=${answers[\`d${di}_q${qi}\`] || 0}`).join(' | ');
+    const scores = dim.questions.map((q, qi) => 'F' + (qi+1) + '=' + (answers['d' + di + '_q' + qi] || 0)).join(' | ');
     einzelantwortenCompact += `${dim.shortTitle}: ${scores}\n`;
   });
 
