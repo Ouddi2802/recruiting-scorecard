@@ -1329,6 +1329,13 @@ function submitResults() {
     checklistenPayload[cl.title] = checklistAnswers[cl.key];
   });
 
+  // Compact Einzelantworten (scores only, fits under 2000 chars)
+  let einzelantwortenCompact = '';
+  dimensions.forEach((dim, di) => {
+    const scores = dim.questions.map((q, qi) => `F${qi+1}=${answers[\`d${di}_q${qi}\`] || 0}`).join(' | ');
+    einzelantwortenCompact += `${dim.shortTitle}: ${scores}\n`;
+  });
+
   const payload = {
     timestamp: new Date().toISOString(),
     typ: "recruiting-reifegradanalyse",
@@ -1336,6 +1343,7 @@ function submitResults() {
     ergebnis: { gesamtPercent: gesamtPct, status: status.label },
     dimensionen: dimensionenPayload,
     antworten: antwortenPayload,
+    einzelantworten_kompakt: einzelantwortenCompact.trim(),
     beobachtungen: beobachtungenPayload,
     checklisten: checklistenPayload,
     zusatzfragen: {
