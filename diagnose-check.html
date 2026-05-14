@@ -1336,11 +1336,19 @@ function submitResults() {
     einzelantwortenCompact += `${dim.shortTitle}: ${scores}\n`;
   });
 
+  // Simple score keys for Make.com URL builder (no special chars)
+  const scoreKeys = ['org','eb','zk','cj','pq','dk','tk'];
+  const scores = {};
+  dimensions.forEach((dim, i) => {
+    scores[scoreKeys[i]] = getDimensionScore(i);
+  });
+
   const payload = {
     timestamp: new Date().toISOString(),
     typ: "recruiting-reifegradanalyse",
     identity: identity,
     ergebnis: { gesamtPercent: gesamtPct, status: status.label },
+    scores: scores,
     dimensionen: dimensionenPayload,
     antworten: antwortenPayload,
     einzelantworten_kompakt: einzelantwortenCompact.trim(),
